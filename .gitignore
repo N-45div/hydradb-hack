@@ -1,0 +1,6 @@
+/target
+/data/raw
+/data/sessions
+*.parquet
+.hydradb/
+node_modules/
