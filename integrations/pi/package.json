@@ -1,0 +1,10 @@
+{
+  "name": "pi-pagefault",
+  "version": "0.1.0",
+  "description": "pi extension: compaction that learns. Pages context out to a HydraDB graph via the pagefault API and pages back what the next step needs.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "keywords": ["pi-package", "pi-extension", "compaction", "memory", "hydradb"],
+  "pi": { "extensions": ["./pagefault.ts"] },
+  "peerDependencies": { "@earendil-works/pi-coding-agent": "*", "typebox": "*" }
+}
