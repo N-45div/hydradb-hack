@@ -102,13 +102,17 @@ Set `PAGEFAULT_API_KEY` to require a bearer token on session endpoints.
 docker build -t pagefault . && docker run -p 8080:8080 -v pagefault-data:/data pagefault
 ```
 
-The image builds the pinned open-source HydraDB engine from source. HydraDB listens only inside the container, and its token is generated at startup and never exposed. It deploys as-is to Railway, Fly or Render: attach a volume at `/data`, and `PORT` is respected.
+Every push to `main` also builds and publishes this image to GHCR (`.github/workflows/image.yml`), so a host can deploy `ghcr.io/n-45div/hydradb-hack:latest` without compiling. The image builds the pinned open-source HydraDB engine from source. HydraDB listens only inside the container, and its token is generated at startup and never exposed. It deploys as-is to Railway, Fly or Render: attach a volume at `/data`, and `PORT` is respected.
 
 Local development:
 ```bash
 # HydraDB: see github.com/hydra-db/hydradb "Run a local server" (needs LAGraph: scripts/install_lagraph.sh /opt/lagraph)
 cargo run --release --bin server     # HYDRADB_URL, HYDRADB_TOKEN, PAGEFAULT_STORE=hydra|memory
 ```
+
+## Under load
+
+`scripts/loadtest.py` replays held-out sessions as concurrent live agents against one HydraDB node. With 16 agents streaming events, compacting and recalling at once (282 calls in 6.3 s), compaction took p50 181 ms and p95 357 ms. That run shared the node with a running benchmark, and it's well under the latency of a single LLM call.
 
 ## Layout
 
