@@ -1,0 +1,5 @@
+target
+data/raw
+data/sessions
+.git
+integrations/pi/node_modules
