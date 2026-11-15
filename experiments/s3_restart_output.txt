@@ -2,8 +2,8 @@
 + unzip -o -q rustfs.zip -d rustfs
 + ls -la rustfs
 total 269776
-drwxr-xr-x  2 runner runner      4096 Nov 15 10:57 .
-drwxr-xr-x 15 runner runner      4096 Nov 15 10:57 ..
+drwxr-xr-x  2 runner runner      4096 Nov 15 10:58 .
+drwxr-xr-x 15 runner runner      4096 Nov 15 10:58 ..
 -rwxr-xr-x  1 runner runner 276241344 Oct 25 14:15 rustfs
 ++ find rustfs -type f -name 'rustfs*' -perm -u+x
 ++ head -1
@@ -37,13 +37,10 @@ Options:
 ++ seq 1 30
 + for i in $(seq 1 30)
 + curl -s -o /dev/null http://127.0.0.1:9000/
-+ sleep 1
-+ for i in $(seq 1 30)
-+ curl -s -o /dev/null http://127.0.0.1:9000/
 + break
 + tail -5 rustfs.log
 + curl -s -w ' make-bucket HTTP %{http_code}\n' -X PUT --aws-sigv4 aws:amz:us-east-1:s3 --user pagefaultadmin:pagefault-secret-0123456789 http://127.0.0.1:9000/hydradb
- make-bucket HTTP 200
+Service not ready: waiting for storage_quorum make-bucket HTTP 503
 + run_node
 + docker run -d --name pf --network host -e CLOUD_PROVIDER=aws -e AWS_BUCKET_NAME=hydradb -e AWS_DEFAULT_REGION=us-east-1 -e AWS_ENDPOINT=http://127.0.0.1:9000 -e AWS_ALLOW_HTTP=true -e AWS_ACCESS_KEY_ID=pagefaultadmin -e AWS_SECRET_ACCESS_KEY=pagefault-secret-0123456789 -e HYDRADB_TOKEN=ci-token-0123456789abcdef0123456789 -e PORT=8080 ghcr.io/n-45div/hydradb-hack:latest
 Unable to find image 'ghcr.io/n-45div/hydradb-hack:latest' locally
@@ -64,29 +61,32 @@ e8e3cdcc9323: Waiting
 de85ef663020: Waiting
 d6582ce8fef7: Waiting
 9fde93fad7f8: Waiting
-43924281cf6a: Waiting
+a287ae601dcc: Waiting
 18198a82f098: Waiting
-26538842dfbf: Verifying Checksum
-26538842dfbf: Download complete
+43924281cf6a: Waiting
 bfc246b0ebca: Verifying Checksum
 bfc246b0ebca: Download complete
+26538842dfbf: Verifying Checksum
+26538842dfbf: Download complete
+8c356fffdb0c: Verifying Checksum
+8c356fffdb0c: Download complete
 4269c1fda3c2: Verifying Checksum
 4269c1fda3c2: Download complete
-de85ef663020: Verifying Checksum
-de85ef663020: Download complete
 e8e3cdcc9323: Verifying Checksum
 e8e3cdcc9323: Download complete
-26538842dfbf: Pull complete
+de85ef663020: Verifying Checksum
+de85ef663020: Download complete
 d6582ce8fef7: Verifying Checksum
 d6582ce8fef7: Download complete
 9fde93fad7f8: Verifying Checksum
 9fde93fad7f8: Download complete
+26538842dfbf: Pull complete
+a287ae601dcc: Verifying Checksum
+a287ae601dcc: Download complete
 43924281cf6a: Verifying Checksum
 43924281cf6a: Download complete
-a287ae601dcc: Download complete
+18198a82f098: Verifying Checksum
 18198a82f098: Download complete
-8c356fffdb0c: Verifying Checksum
-8c356fffdb0c: Download complete
 8c356fffdb0c: Pull complete
 bfc246b0ebca: Pull complete
 4269c1fda3c2: Pull complete
@@ -99,45 +99,326 @@ a287ae601dcc: Pull complete
 18198a82f098: Pull complete
 Digest: sha256:20f3a00b6b04c4aa7046c1e3bfa2c4e4da67e2150a1be7013495174753483819
 Status: Downloaded newer image for ghcr.io/n-45div/hydradb-hack:latest
-961c434b882790d421289ca89b481d508b589b4715b5f24ba20d36e3f4a463c9
+ccf2352ef50cb52cc1e1edd38d4d47f43b9a7ddeeb2ac9ec16b2e1b50c73d82b
 ++ seq 1 90
 + for i in $(seq 1 90)
 + curl -sf http://127.0.0.1:9090/readyz
 + sleep 2
 + for i in $(seq 1 90)
 + curl -sf http://127.0.0.1:9090/readyz
-+ break
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
 + docker logs pf
-+ tail -8
 + grep -E '"level":"(WARN|ERROR)"|writers allowed|HydraDB ready|resumed'
-HydraDB ready
-resumed 0 repo graphs from hydradb(http://127.0.0.1:8443)
++ tail -8
+{"binary":"graph-node","error_message":"object store list failed at graph/data/_graph_nodes/v1","error_type":"hydradb::engine::placement","hydradb.placement.state":"shed","instance":"runnervm8axu0","level":"WARN","message":"placement heartbeat LIST failed","node_id":"node-0","service_name":"hydradb-graph-node","since_last_success_ms":"150002","target":"hydradb::engine::placement","timestamp":"2026-11-15T11:00:58.142866Z","version":"0.1.0+916637477f3f"}
+{"binary":"graph-node","error_message":"object store list failed at graph/data/_graph_nodes/v1","error_type":"hydradb::engine::placement","hydradb.placement.state":"shed","instance":"runnervm8axu0","level":"WARN","message":"placement heartbeat LIST failed","node_id":"node-0","service_name":"hydradb-graph-node","since_last_success_ms":"155002","target":"hydradb::engine::placement","timestamp":"2026-11-15T11:01:03.142401Z","version":"0.1.0+916637477f3f"}
+{"attempt":5,"binary":"graph-node","error_message":"create-only probe of graph/data/_create_only_probe/node-0-1794740308133267055-5/probe failed: Object at location graph/data/_create_only_probe/node-0-1794740308133267055-5/probe not found: Error performing PUT http://127.0.0.1:9000/hydradb/graph/data/_create_only_probe/node-0-1794740308133267055-5/probe in 2.253165ms - Server returned non-2xx status code: 404 Not Found: <?xml version=\"1.0\" encoding=\"UTF-8\"?><Error><Code>NoSuchBucket</Code><Message>The specified bucket does not exist</Message></Error>","error_type":"graph_node","instance":"runnervm8axu0","level":"WARN","message":"create-only probe failed again","retry_in":"160s","service_name":"hydradb-graph-node","target":"graph_node","timestamp":"2026-11-15T11:01:03.182167Z","version":"0.1.0+916637477f3f"}
+{"binary":"graph-node","error_message":"object store list failed at graph/data/_graph_nodes/v1","error_type":"hydradb::engine::placement","hydradb.placement.state":"shed","instance":"runnervm8axu0","level":"WARN","message":"placement heartbeat LIST failed","node_id":"node-0","service_name":"hydradb-graph-node","since_last_success_ms":"160002","target":"hydradb::engine::placement","timestamp":"2026-11-15T11:01:08.142621Z","version":"0.1.0+916637477f3f"}
+{"binary":"graph-node","error_message":"object store list failed at graph/data/_graph_nodes/v1","error_type":"hydradb::engine::placement","hydradb.placement.state":"shed","instance":"runnervm8axu0","level":"WARN","message":"placement heartbeat LIST failed","node_id":"node-0","service_name":"hydradb-graph-node","since_last_success_ms":"165003","target":"hydradb::engine::placement","timestamp":"2026-11-15T11:01:13.143080Z","version":"0.1.0+916637477f3f"}
+{"binary":"graph-node","error_message":"object store list failed at graph/data/_graph_nodes/v1","error_type":"hydradb::engine::placement","hydradb.placement.state":"shed","instance":"runnervm8axu0","level":"WARN","message":"placement heartbeat LIST failed","node_id":"node-0","service_name":"hydradb-graph-node","since_last_success_ms":"170002","target":"hydradb::engine::placement","timestamp":"2026-11-15T11:01:18.142592Z","version":"0.1.0+916637477f3f"}
+{"binary":"graph-node","error_message":"object store list failed at graph/data/_graph_nodes/v1","error_type":"hydradb::engine::placement","hydradb.placement.state":"shed","instance":"runnervm8axu0","level":"WARN","message":"placement heartbeat LIST failed","node_id":"node-0","service_name":"hydradb-graph-node","since_last_success_ms":"175003","target":"hydradb::engine::placement","timestamp":"2026-11-15T11:01:23.143779Z","version":"0.1.0+916637477f3f"}
+{"binary":"graph-node","error_message":"object store list failed at graph/data/_graph_nodes/v1","error_type":"hydradb::engine::placement","hydradb.placement.state":"shed","instance":"runnervm8axu0","level":"WARN","message":"placement heartbeat LIST failed","node_id":"node-0","service_name":"hydradb-graph-node","since_last_success_ms":"180003","target":"hydradb::engine::placement","timestamp":"2026-11-15T11:01:28.143352Z","version":"0.1.0+916637477f3f"}
 + python3 scripts/restart_test.py before http://127.0.0.1:8443 ci-token-0123456789abcdef0123456789
-before upsert: {"query_id": "http-query-220", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:1"}
-before edge: {"query_id": "http-query-232", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:2"}
-before count: [[{'type': 'integer', 'value': 5}]]
-+ docker rm -f pf
-pf
-+ sleep 2
-+ run_node
-+ docker run -d --name pf --network host -e CLOUD_PROVIDER=aws -e AWS_BUCKET_NAME=hydradb -e AWS_DEFAULT_REGION=us-east-1 -e AWS_ENDPOINT=http://127.0.0.1:9000 -e AWS_ALLOW_HTTP=true -e AWS_ACCESS_KEY_ID=pagefaultadmin -e AWS_SECRET_ACCESS_KEY=pagefault-secret-0123456789 -e HYDRADB_TOKEN=ci-token-0123456789abcdef0123456789 -e PORT=8080 ghcr.io/n-45div/hydradb-hack:latest
-f3e61bbe3c03d40d6008d096505c7e5d7a610b0a58b40aaf6dd6b7ca75632d7d
-++ seq 1 90
-+ for i in $(seq 1 90)
-+ curl -sf http://127.0.0.1:9090/readyz
-+ sleep 2
-+ for i in $(seq 1 90)
-+ curl -sf http://127.0.0.1:9090/readyz
-+ break
-+ docker logs pf
-+ tail -8
-+ grep -E '"level":"(WARN|ERROR)"|writers allowed|HydraDB ready|resumed'
-HydraDB ready
-resumed 0 repo graphs from hydradb(http://127.0.0.1:8443)
-+ python3 scripts/restart_test.py after http://127.0.0.1:8443 ci-token-0123456789abcdef0123456789
-after upsert: {"http_error": 421, "body": "{\"error\":{\"code\":\"not_cell_writer\",\"message\":\"cell cell-0 is not owned by this node; owner: node-0\",\"owner\":\"node-0\"}}"}
-after edge: {"http_error": 421, "body": "{\"error\":{\"code\":\"not_cell_writer\",\"message\":\"cell cell-0 is not owned by this node; owner: node-0\",\"owner\":\"node-0\"}}"}
-after count: [[{'type': 'integer', 'value': 5}]]
-+ docker logs pf
-+ grep -E '"level":"(WARN|ERROR)"'
-+ tail -5
+before upsert: {"http_error": 421, "body": "{\"error\":{\"code\":\"not_cell_writer\",\"message\":\"cell cell-0 is not owned by this node; owner: unknown\"}}"}
+before edge: {"http_error": 421, "body": "{\"error\":{\"code\":\"not_cell_writer\",\"message\":\"cell cell-0 is not owned by this node; owner: unknown\"}}"}
+Traceback (most recent call last):
+  File "/home/runner/work/hydradb-hack/hydradb-hack/scripts/restart_test.py", line 27, in <module>
+    c = q("MATCH (n:S7) RETURN count(*) AS c")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/hydradb-hack/hydradb-hack/scripts/restart_test.py", line 16, in q
+    with urllib.request.urlopen(req, timeout=60) as r:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
