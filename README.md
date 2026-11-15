@@ -71,7 +71,7 @@ What this shows, plainly:
 - **The HydraDB graph adds a real, mostly consistent gain on top.** The fair test is pagefault against the same learner on a plain key-value fault counter. The graph cuts faults by a further **13% on pydantic and 7% on dvc (5/5 orders each)**, and 2.5% on sqlglot (3/5). Unfiltered, it's 20% and 8% (5/5), and −1% on sqlglot. Most of the gain comes from two-hop semantic chains that HydraDB's `MSpaths` finds, such as command → error → the file that fixed it; a counter can't express these. Every restore also shows the path that pulled it in. A flat keyword store is the worst policy everywhere.
 - **It's real continual learning.** Faults fall as sessions are learned, on held-out issues, across 5 training orders. See the live chart at `/`.
 
-The pydantic run was repeated with HydraDB doing all traversal (`results/pydantic_hydradb.json`, produced in CI by the `experiments` workflow against the open-source engine). pagefault's faults per compaction match the in-memory run at every checkpoint. The no-KV graph arm differs at one checkpoint (0.158 vs 0.154).
+**Where these numbers come from.** The benchmark runs against HydraDB in CI: the `hydra-bench` workflow starts one HydraDB graph-node per job and replays 3 repos × 5 training orders on it, with traversal done by `algo.MSpaths` and `algo.degree`. For fast iteration, the same code also runs on an in-memory mirror that implements the same store contract (`MemStore`). On pydantic, the HydraDB run and the mirror agree at every checkpoint for pagefault. The dashboard labels every result with the store that produced it ("graph store: HydraDB" or "in-memory mirror").
 
 ### Against summary compaction
 
@@ -94,7 +94,7 @@ cargo run --release --bin dump_points -- --data data/sessions/pydantic__pydantic
 OPENAI_API_KEY=... python scripts/llm_summary_arm.py points.jsonl --out llm.json
 python scripts/summarize.py results/*.json
 ```
-The `experiments` GitHub Actions workflow runs the replay and the point export from scratch and commits the results.
+GitHub Actions reproduces everything from scratch: `hydra-bench` runs the full benchmark on HydraDB, and `experiments` exports the compaction points for the LLM-summary comparison.
 
 ## How it works
 
