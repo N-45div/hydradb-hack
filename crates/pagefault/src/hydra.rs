@@ -38,6 +38,8 @@ pub struct HydraStore {
     cell: String,
     pub mode: EdgeWriteMode,
     pub requests: u64,
+    /// Per-process prefix for client query ids (see `query`).
+    nonce: u64,
     degree_cache: HashMap<(u8, EdgeKind), Arc<HashMap<u64, usize>>>,
 }
 
@@ -111,6 +113,8 @@ impl HydraStore {
             cell: env("HYDRADB_CELL", "cell-0"),
             mode,
             requests: 0,
+            nonce: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_nanos() as u64).unwrap_or(0)
+                ^ ((std::process::id() as u64) << 32),
             degree_cache: HashMap::new(),
         })
     }
@@ -119,7 +123,14 @@ impl HydraStore {
     pub fn query(&mut self, q: &str, params: Value) -> anyhow::Result<Vec<Vec<Value>>> {
         self.requests += 1;
         let params = if params.is_null() { json!({}) } else { params };
-        let mut body = json!({"cell_id": self.cell, "query": q, "parameters": params, "page_size": 4096});
+        // HydraDB keys write idempotency on the request's query id. Its own ids
+        // (`http-query-N`) restart from zero with every process while the stored
+        // keys persist in object storage, so after a restart new writes collide
+        // with old keys ("idempotency key conflict ... different payload").
+        // A globally unique client id avoids that.
+        let qid = format!("pf-{:x}-{}", self.nonce, self.requests);
+        let mut body = json!({"cell_id": self.cell, "query": q, "parameters": params, "page_size": 4096, "query_id": qid});
+        let mut handoff_retries = 0;
         let mut out = Vec::new();
         loop {
             let resp = self
@@ -132,6 +143,13 @@ impl HydraStore {
                 .with_context(|| format!("HydraDB request to {}", self.url))?;
             let status = resp.status();
             let text = resp.text()?;
+            // 421 not_cell_writer: another process still holds the writer lease
+            // (e.g. right after a restart). Wait for the handoff, bounded.
+            if status.as_u16() == 421 && handoff_retries < 25 {
+                handoff_retries += 1;
+                std::thread::sleep(std::time::Duration::from_secs(2));
+                continue;
+            }
             let v: Value = serde_json::from_str(&text).map_err(|_| anyhow!("HydraDB {status}: {text}"))?;
             if let Some(err) = v.get("error") {
                 bail!("HydraDB error: {err} in query: {}", &q[..q.len().min(300)]);
