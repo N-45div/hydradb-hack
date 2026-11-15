@@ -74,6 +74,7 @@ fn main() -> anyhow::Result<()> {
                     learned: (&mut store, 1),
                     learned_params: learner.params.clone(),
                     extra: BTreeMap::new(),
+                    graph_kv: None,
                 };
                 let sel = run_arm(arm, &repo, &p.infos, cp, c, &mut stores)?;
                 let keys: BTreeSet<String> = sel.items.iter().flat_map(|&i| p.infos[i].provides.iter()).map(|e| e.label()).collect();

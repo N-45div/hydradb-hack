@@ -27,10 +27,21 @@ async function api(path: string, body?: unknown, signal?: AbortSignal): Promise<
 		body: body === undefined ? undefined : JSON.stringify(body),
 		signal: signal ?? AbortSignal.timeout(15000),
 	});
-	const json = await res.json();
-	if (!res.ok || json.error) throw new Error(json.error ?? `HTTP ${res.status}`);
+	const text = await res.text();
+	let json: any;
+	try {
+		json = JSON.parse(text);
+	} catch {
+		throw new Error(`${path}: HTTP ${res.status}, not JSON: ${text.slice(0, 80)}`);
+	}
+	if (!res.ok || json.error) throw new Error(`${path}: ${json.error ?? "HTTP " + res.status}`);
 	return json;
 }
+
+const DEBUG = !!process.env.PAGEFAULT_DEBUG;
+const log = (...a: unknown[]) => {
+	if (DEBUG) console.error("[pagefault]", ...a);
+};
 
 const textOf = (content: any): string =>
 	Array.isArray(content) ? content.filter((c) => c?.type === "text").map((c) => c.text).join("\n") : String(content ?? "");
@@ -64,9 +75,12 @@ export default function (pi: ExtensionAPI) {
 			const r = await api(`/v1/sessions/${id}/check`, { command: event.input.command });
 			if (r.warning) {
 				warnings.set(event.toolCallId, r.warning);
+				log("check warning:", r.warning);
 				ctx.ui?.notify?.(`pagefault: ${r.warning}`, "warning");
 			}
-		} catch {}
+		} catch (e) {
+			log("call failed:", String(e));
+		}
 	});
 
 	pi.on("tool_result", async (event: any, ctx) => {
@@ -76,7 +90,9 @@ export default function (pi: ExtensionAPI) {
 			await api(`/v1/sessions/${id}/events`, {
 				events: [{ tool: event.toolName, args: event.input ?? {}, output: output.slice(0, 200_000), is_error: !!event.isError }],
 			});
-		} catch {}
+		} catch (e) {
+			log("call failed:", String(e));
+		}
 		const w = warnings.get(event.toolCallId);
 		if (w) {
 			warnings.delete(event.toolCallId);
@@ -91,6 +107,8 @@ export default function (pi: ExtensionAPI) {
 			const r = await api(`/v1/sessions/${id}/compact`, { keep_recent_tokens: KEEP_RECENT, budget_tokens: BUDGET }, signal);
 			const prev = preparation.previousSummary ? `\n\n## Earlier summary\n${preparation.previousSummary}` : "";
 			ctx.ui?.notify?.(`pagefault: paged out ${r.evicted_steps} steps, restored ${r.kept.length} (${r.kept_tokens} tokens)`, "info");
+			log(`compaction: paged out ${r.evicted_steps} steps (${r.evicted_tokens} tokens), restored ${r.kept.length} (${r.kept_tokens} tokens)`);
+			for (const k of r.kept) log(`  kept step ${k.step} ${k.action} | why: ${k.why}`);
 			return {
 				compaction: {
 					summary: r.summary_md + prev,
@@ -119,6 +137,7 @@ export default function (pi: ExtensionAPI) {
 			try {
 				const id = await ensureSession(ctx);
 				const r = await api(`/v1/sessions/${id}/recall?q=${encodeURIComponent(params.query)}&k=${params.k ?? 3}`, undefined, signal);
+				log(`recall "${params.query}" -> ${r.items.length} items (page fault recorded)`);
 				const text = r.items.length
 					? r.items.map((i: any) => `### step ${i.step}: ${i.action}\n${i.text}`).join("\n\n")
 					: "Nothing in memory matches. Fetch it directly.";
@@ -133,7 +152,9 @@ export default function (pi: ExtensionAPI) {
 		if (!sessionId) return;
 		try {
 			await api(`/v1/sessions/${sessionId}/end`, { resolved: process.env.PAGEFAULT_RESOLVED === "1" });
-		} catch {}
+		} catch (e) {
+			log("call failed:", String(e));
+		}
 		sessionId = undefined;
 	});
 }
