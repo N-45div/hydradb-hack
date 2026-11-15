@@ -5,6 +5,14 @@ DATA=${DATA_DIR:-/data}
 # The store is durable; HydraDB's cache is disposable by design. Start every
 # boot with an empty cache so nothing stale from the previous process is reused.
 rm -rf "$DATA/cache"
+# HydraDB's local-folder store (object_store LocalFileSystem) cannot do the
+# conditional updates (PutMode::Update) a restarted writer needs for its lease
+# and manifests, so every write fails after a restart. On local storage, start
+# each boot from an empty store; use S3-compatible storage for durability.
+if [ "${CLOUD_PROVIDER:-local}" = "local" ] && [ -d "$DATA/store" ] && [ -n "$(ls -A "$DATA/store" 2>/dev/null)" ]; then
+  echo "local HydraDB store found: starting fresh (LocalFileSystem lacks PutMode::Update)"
+  rm -rf "$DATA/store"
+fi
 mkdir -p "$DATA/store" "$DATA/cache"
 # The HydraDB token never leaves the container: generate one if none is given.
 if [ -z "${HYDRADB_TOKEN:-}" ]; then
