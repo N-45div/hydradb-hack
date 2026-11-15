@@ -173,7 +173,7 @@ function kpis() {
   el.innerHTML = `
     <div class="kpi"><b>${pct(1 - avg("pf") / avg("rec"))}</b><small>page faults vs keep-most-recent, avg over ${rows.length} repos, held-out issues</small></div>
     ${llm}
-    <div class="kpi"><b>${pct(1 - avg("pf") / avg("kv"))}</b><small>what the HydraDB graph adds on top of a plain key-value learner (honest: modest)</small></div>`;
+    <div class="kpi"><b>${pct(1 - avg("pf") / avg("kv"))}</b><small>what the HydraDB graph (MSpaths chains) adds on top of a plain key-value learner</small></div>`;
 }
 
 function drawLLM() {

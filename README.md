@@ -51,27 +51,27 @@ We replay real SWE-agent runs ([nebius/SWE-agent-trajectories](https://huggingfa
 | Keep most recent (truncation, the usual default) | 0.395 | 0.547 | 0.616 |
 | Flat store + keyword search (BM25) | 0.577 | 0.961 | 0.877 |
 | Session graph only, no learning | 0.360 | 0.603 | 0.460 |
-| Repo graph in HydraDB, no learning | 0.360 → 0.344 | 0.603 → 0.582 | 0.460 → 0.453 |
+| Repo graph in HydraDB, no learning | 0.360 → 0.352 | 0.603 → 0.569 | 0.460 → 0.449 |
 | Plain key-value fault counter + learning (no graph) | 0.336 → 0.188 ±0.017 | 0.608 → 0.345 ±0.015 | 0.504 → 0.420 ±0.028 |
 | Learning, session graph, no HydraDB repo graph | 0.360 → 0.178 ±0.006 | 0.603 → 0.353 ±0.015 | 0.460 → 0.412 ±0.026 |
-| HydraDB repo graph + learning | 0.360 → 0.170 ±0.011 | 0.603 → 0.336 ±0.007 | 0.460 → 0.407 ±0.023 |
-| **pagefault: HydraDB repo graph + KV counter + learning** | **0.360 → 0.168 ±0.014** | **0.603 → 0.335 ±0.017** | **0.460 → 0.401 ±0.025** |
+| HydraDB repo graph + learning | 0.360 → 0.170 ±0.007 | 0.603 → 0.331 ±0.016 | 0.460 → 0.404 ±0.024 |
+| **pagefault: HydraDB repo graph + KV counter + learning** | **0.360 → 0.163 ±0.016** | **0.603 → 0.335 ±0.016** | **0.460 → 0.392 ±0.024** |
 | Oracle (knows the future) | 0.016 | 0.065 | 0.112 |
 
 **Unfiltered.** All held-out sessions with a compaction, including ones where nothing was ever re-fetched (`results/unfiltered/`). Every rate drops because most compactions cost nothing, but the ranking holds:
 
-| Policy | pydantic (725) | sqlglot (363) | dvc (906) |
+| Policy | pydantic (725 compactions) | sqlglot (363) | dvc (906) |
 |---|---|---|---|
 | Keep most recent | 0.110 | 0.193 | 0.137 |
 | Plain key-value fault counter + learning | 0.050 | 0.117 | 0.086 |
-| **pagefault** | **0.041** | **0.120** | **0.082** |
+| **pagefault** | **0.040** | **0.118** | **0.079** |
 
 What this shows, plainly:
-- **Learning from page faults is the main lever.** pagefault has 57%, 39% and 35% fewer faults than truncation, winning on all 5 training orders in every repo. Accumulating graph structure without learning barely moves (0.360 → 0.344).
-- **The HydraDB graph adds a modest, mostly consistent gain on top.** The fair test is pagefault against the same learner on a plain key-value fault counter. The graph cuts faults by a further 11%, 3% and 4% (winning on 4, 4 and 5 of 5 orders). Unfiltered, the gain is 18% and 5%, but −2% on sqlglot. The graph also gives every restore an explanation: the edge path that pulled it in. A flat keyword store is the worst policy everywhere.
+- **Learning from page faults is the main lever.** pagefault has 59%, 39% and 36% fewer faults than truncation, winning on all 5 training orders in every repo. Accumulating graph structure without learning barely moves (0.360 → 0.352).
+- **The HydraDB graph adds a real, mostly consistent gain on top.** The fair test is pagefault against the same learner on a plain key-value fault counter. The graph cuts faults by a further **13% on pydantic and 7% on dvc (5/5 orders each)**, and 2.5% on sqlglot (3/5). Unfiltered, it's 20% and 8% (5/5), and −1% on sqlglot. Most of the gain comes from two-hop semantic chains that HydraDB's `MSpaths` finds, such as command → error → the file that fixed it; a counter can't express these. Every restore also shows the path that pulled it in. A flat keyword store is the worst policy everywhere.
 - **It's real continual learning.** Faults fall as sessions are learned, on held-out issues, across 5 training orders. See the live chart at `/`.
 
-The pydantic run was repeated with HydraDB as the store (`results/pydantic_hydradb.json`). It tracks the in-memory run closely (seed 0: recall 0.632 → 0.842 on both; at the 800-session checkpoint 0.838 vs 0.834).
+The pydantic run was repeated with HydraDB doing all traversal (`results/pydantic_hydradb.json`, produced in CI by the `experiments` workflow against the open-source engine). pagefault's faults per compaction match the in-memory run at every checkpoint. The no-KV graph arm differs at one checkpoint (0.158 vs 0.154).
 
 ### Against summary compaction
 
@@ -112,19 +112,35 @@ any harness ── tool calls ──▶  pagefault (Rust, axum)  ── HTTP JSO
    - `FIXED_BY`: learned, error → the file whose edit resolved it
 
    Every edge carries a weight `w` and a count `n`.
-3. **Page in** (`policy.rs`): traverse from the entities in focus over the session graph plus HydraDB (one hop, then two hops through the strongest intermediates). Each evicted step gets graph features: in focus, session co-occurrence, repo `CO`/`MENTIONS`/`NEXT`/`FIXED_BY`, 2-hop, session degree, edited, eviction recency and repo degree. A per-repo linear model scores them, and a greedy budgeted cover picks the steps.
+3. **Page in** (`policy.rs`). The traversal runs inside HydraDB, with two native path calls per compaction:
+   - **One `algo.MSpaths` call** from every focus entity to every evicted candidate, one hop, over all four relationship types.
+   - **One `algo.MSpaths` call** for two-hop *semantic* chains over `MENTIONS`/`NEXT`/`FIXED_BY`, such as `Cmd:pytest -MENTIONS-> Error:KeyError -FIXED_BY-> File:auth.py`.
+   - **`algo.degree`** gives how central each candidate is across past sessions, cached until the next write.
+
+   Every restored step comes with the path that pulled it in, as its "why". Each evicted step gets features from those paths plus the session graph:
+   - **From paths:** repo `CO`/`MENTIONS`/`NEXT`/`FIXED_BY` strength, the 2-hop chain, and repo degree.
+   - **From the session and simple counts:** in focus, session co-occurrence, session degree, edited, eviction recency, and fault count.
+
+   A per-repo linear model scores them, and a greedy budgeted cover picks the steps.
 4. **Learn** (`learn.rs`), after each session:
    - **Fault** (needed, not restored): create or strengthen `NEXT(focus → needed)`.
    - **Waste** (restored, never used): weaken the `NEXT` edges that pulled it in.
    - **Weights:** fit the repo's feature weights with online logistic regression.
    - **Fault counter:** count how often each entity was a page fault. It's a plain per-repo counter and one more feature; the benchmark reports it alone as the no-graph ablation.
 
-   Edges and their learned weights are written back to HydraDB in batches. The 15 per-repo feature weights live in the service process for now.
+   Everything learned lives in HydraDB:
+   - edges and their weights;
+   - fault counts as a vertex property;
+   - the per-repo feature weights on a metadata vertex.
+
+   On startup the service rebuilds every repo's learner from HydraDB (`load_from_store`), so a restart or redeploy resumes learning instead of starting over. On Render, HydraDB's store sits on a persistent disk. Setting `CLOUD_PROVIDER=aws` with `AWS_BUCKET_NAME` puts it on S3 instead, HydraDB's native mode.
 
 HydraDB specifics we built around:
 - Node ids are non-negative integers, so we hash entities to 56 bits plus a 7-bit space for tenants and experiment arms.
 - Batched vertex upserts take exactly one label, and batched edge `MERGE … SET` needs single-label endpoints.
-- A `MATCH` takes one relationship type, so neighbor reads are one `UNION ALL` request per type across all focus ids.
+- `algo.MSpaths` selects by a string property, so every vertex carries a repo-scoped selector (`sel = "repo|File:path"`). Lists are inlined as escaped Cypher literals because list parameters are rejected.
+- A `MATCH` takes one relationship type; the path procedures are the only way to cross types in one request, which is why traversal uses them.
+- `scripts/hydra_probe.py` (run in CI by `hydra-probe.yml`) checks every query shape against the real engine. Its latest output is in `experiments/hydra_probe_output.txt`.
 
 ## API
 
@@ -190,7 +206,7 @@ docs/LAUNCH.md             go-to-market
 - **The benchmark measures re-fetches, not task success.** A live A/B with pi on local models is next.
 - **Ground truth is what the recorded agent fetched again.** That's a proxy for need, not an oracle. All trajectories come from one family of agent models (SWE-agent with Llama).
 - **A file counts as one item.** Restoring lines 1–100 counts as a hit even if the agent reopens it at line 600.
-- **The graph's edge over a plain learned counter is modest** (2–18%, negative on one unfiltered repo). Learning from page faults does most of the work.
+- **The graph's edge over a plain learned counter is real but uneven**: 7–20% on pydantic and dvc, about zero on sqlglot. Learning from page faults does most of the work.
 - **The live service relabels its own wins.** Learning in `end()` treats only re-fetches as needed, so a restore that prevented a re-fetch can be scored as waste. The benchmark replays are unaffected.
 - **Next:**
   - an MCP server, so Claude Code and Codex get `recall` and `compact` with no plugin
