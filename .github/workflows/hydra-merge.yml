@@ -1,0 +1,44 @@
+name: hydra-merge
+# Merge the per-order HydraDB benchmark results from a finished hydra-bench run
+# (its artifacts) and commit them as the headline results, without re-running.
+on:
+  push:
+    branches: [main]
+    paths: ["experiments/hydra-merge-run.txt"]
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Which run
+        id: run
+        run: echo "id=$(head -1 experiments/hydra-merge-run.txt | tr -dc '0-9')" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: part-*
+          path: parts
+          merge-multiple: true
+          run-id: ${{ steps.run.outputs.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge and commit
+        run: |
+          ls parts | head -40
+          mkdir -p results/memory/unfiltered results/unfiltered
+          for r in pydantic__pydantic tobymao__sqlglot iterative__dvc; do
+            [ -f results/$r.json ] && git mv -f results/$r.json results/memory/$r.json || true
+            [ -f results/unfiltered/$r.json ] && git mv -f results/unfiltered/$r.json results/memory/unfiltered/$r.json || true
+            python3 scripts/merge_seeds.py results/$r.json parts/f.$r.*.json
+            python3 scripts/merge_seeds.py results/unfiltered/$r.json parts/u.$r.*.json
+          done
+          [ -f results/pydantic_hydradb.json ] && git rm -q results/pydantic_hydradb.json || true
+          python3 scripts/summarize.py results/*.json results/unfiltered/*.json > results/SUMMARY.txt
+          git config user.name "pagefault-experiments"
+          git config user.email "pagefault-experiments@users.noreply.github.com"
+          git add -A results
+          git commit -m "Benchmark results on HydraDB: 3 repos x 5 training orders" || echo "no changes"
+          git pull --rebase origin main
+          git push origin HEAD:main

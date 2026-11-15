@@ -5,6 +5,8 @@ metric = "faults_per_compaction"
 
 for path in sys.argv[1:]:
     d = json.load(open(path))
+    if "repos" not in d:  # e.g. the LLM-summary comparison: not a replay result
+        continue
     for r in d["repos"]:
         print(f"\n{r['repo']}  train={r['train_sessions']} test_sessions={r['test_sessions']} test_compactions={r['test_compactions']} seeds={d['seeds']} store={d['store']} unfiltered={d.get('keep_empty_tests', False)}")
         arms = [a for a in ["recency", "bm25", "graph_session", "kv_learned", "weights_only", "graph_static", "graph_learned", "graph_kv_learned", "oracle"] if a in r["curves"]]
