@@ -133,7 +133,9 @@ any harness ── tool calls ──▶  pagefault (Rust, axum)  ── HTTP JSO
    - fault counts as a vertex property;
    - the per-repo feature weights on a metadata vertex.
 
-   On startup the service rebuilds every repo's learner from HydraDB (`load_from_store`), so a restart or redeploy resumes learning instead of starting over. On Render, HydraDB's store sits on a persistent disk. Setting `CLOUD_PROVIDER=aws` with `AWS_BUCKET_NAME` puts it on S3 instead, HydraDB's native mode.
+   On startup the service rebuilds every repo's learner from HydraDB (`load_from_store`), so a restart resumes learning instead of starting over. This was verified on Render: a repo's learned edges reloaded after a restart and after a redeploy.
+
+   **Durability needs S3.** HydraDB's local-folder store can't do the conditional updates (`PutMode::Update`) that a restarted writer needs, so writes fail after a restart on local storage. The live demo therefore starts from a fresh local store on each boot. Setting `CLOUD_PROVIDER=aws`, `AWS_BUCKET_NAME`, `AWS_DEFAULT_REGION` and credentials puts HydraDB on S3, its native mode, where state persists. A CI test on S3-compatible RustFS showed data surviving a restart, with the 30 s writer-lease handoff. The full debugging story is in [docs/LEARNING.md](docs/LEARNING.md).
 
 HydraDB specifics we built around:
 - Node ids are non-negative integers, so we hash entities to 56 bits plus a 7-bit space for tenants and experiment arms.
