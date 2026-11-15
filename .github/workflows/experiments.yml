@@ -1,0 +1,49 @@
+name: experiments
+# Re-runs the benchmark (with ablation arms) and exports compaction points for
+# the LLM-summary comparison, then commits the results back to main.
+# Trigger: edit experiments/trigger.txt, or run manually.
+on:
+  push:
+    branches: [main]
+    paths: ["experiments/trigger.txt"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: experiments
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyarrow
+      - name: Build
+        run: cargo build --release --bin replay --bin dump_points
+      - name: Prepare trajectories
+        run: python scripts/prepare_data.py --shards 0 1 2 3 4 5 6 --repos pydantic__pydantic tobymao__sqlglot iterative__dvc --max-per-repo 2000
+      - name: Benchmark (filtered and unfiltered test sets)
+        run: |
+          mkdir -p results/unfiltered
+          for r in pydantic__pydantic tobymao__sqlglot iterative__dvc; do
+            ./target/release/replay --repos $r --seeds 5 --out results/$r.json
+            ./target/release/replay --repos $r --seeds 5 --keep-empty-tests --out results/unfiltered/$r.json
+          done
+      - name: Export compaction points for the LLM-summary arm
+        run: |
+          ./target/release/dump_points --data data/sessions/pydantic__pydantic.jsonl --out results/points_pydantic.jsonl
+          gzip -9 -f results/points_pydantic.jsonl
+          ls -la results results/unfiltered
+      - name: Summarize
+        run: python scripts/summarize.py results/*.json results/unfiltered/*.json | tee results/SUMMARY.txt
+      - name: Commit results
+        run: |
+          git config user.name "pagefault-experiments"
+          git config user.email "pagefault-experiments@users.noreply.github.com"
+          git add results
+          git commit -m "Benchmark results with kv_learned and weights_only ablations" || echo "no changes"
+          git pull --rebase origin main
+          git push origin HEAD:main

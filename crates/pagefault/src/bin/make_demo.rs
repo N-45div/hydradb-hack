@@ -11,7 +11,7 @@ fn main() -> anyhow::Result<()> {
     let n_train: usize = a.get(3).and_then(|s| s.parse().ok()).unwrap_or(400);
     let n_test: usize = a.get(4).and_then(|s| s.parse().ok()).unwrap_or(40);
     let cfg = SimCfg::default();
-    let sp = split("demo", prepare(load_sessions(std::path::Path::new(input))?), &cfg, 4, n_test, n_train, 12);
+    let sp = split("demo", prepare(load_sessions(std::path::Path::new(input))?), &cfg, 4, n_test, n_train, 12, false);
     for (name, sessions) in [("train", sp.train.iter().map(|p| &p.session).collect::<Vec<_>>()), ("test", sp.test.iter().map(|t| &t.0.session).collect())] {
         let f = std::fs::File::create(format!("{prefix}.{name}.jsonl.gz"))?;
         let mut gz = GzEncoder::new(f, flate2::Compression::best());

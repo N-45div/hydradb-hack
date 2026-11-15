@@ -138,7 +138,7 @@ pub fn oracle(ctx: &Ctx) -> Selection {
 // the kind one-hots comes from a graph: the session graph (built from this
 // session's steps) or the repo graph in HydraDB (built from past sessions).
 
-pub const NF: usize = 15;
+pub const NF: usize = 16;
 pub const FEATURES: [&str; NF] = [
     "bias",
     "in_focus",
@@ -155,21 +155,33 @@ pub const FEATURES: [&str; NF] = [
     "kind_file",
     "kind_search",
     "kind_cmd",
+    "kv_need_count",
 ];
 
 /// Hand-set prior. `graph_static` uses it forever; `graph_learned` starts here.
-pub const PRIOR: [f64; NF] = [-3.0, 2.0, 1.0, 0.5, 0.5, 1.5, 1.0, 0.3, 1.0, 0.5, 2.0, 0.3, 0.0, 0.0, 0.0];
+pub const PRIOR: [f64; NF] = [-3.0, 2.0, 1.0, 0.5, 0.5, 1.5, 1.0, 0.3, 1.0, 0.5, 2.0, 0.3, 0.0, 0.0, 0.0, 1.0];
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct GraphParams {
     pub weights: Vec<f64>,
     pub focus_decay: f64,
     pub use_repo: bool,
+    /// Session-graph features (co-occurrence with focus, degree). Off for the plain-store ablation.
+    #[serde(default = "yes")]
+    pub use_session: bool,
+    /// Plain key-value store: how often each entity was a page fault in past sessions.
+    /// Set only for the `kv_learned` ablation.
+    #[serde(default)]
+    pub kv: Option<HashMap<u64, f64>>,
+}
+
+fn yes() -> bool {
+    true
 }
 
 impl Default for GraphParams {
     fn default() -> Self {
-        GraphParams { weights: PRIOR.to_vec(), focus_decay: 0.6, use_repo: true }
+        GraphParams { weights: PRIOR.to_vec(), focus_decay: 0.6, use_repo: true, use_session: true, kv: None }
     }
 }
 
@@ -236,7 +248,12 @@ pub fn graph_score(ctx: &Ctx, store: &mut dyn GraphStore, space: u8, p: &GraphPa
     for (eid, e) in &s.cand {
         let mut v = [0.0; NF];
         v[0] = 1.0;
-        v[8] = (1.0 + *degree.get(eid).unwrap_or(&0) as f64).ln() / 10f64.ln();
+        if p.use_session {
+            v[8] = (1.0 + *degree.get(eid).unwrap_or(&0) as f64).ln() / 10f64.ln();
+        }
+        if let Some(kv) = &p.kv {
+            v[15] = (1.0 + kv.get(eid).copied().unwrap_or(0.0)).ln() / 10f64.ln();
+        }
         v[9] = if edited.contains(eid) { 1.0 } else { 0.0 };
         let age = (cp.recent_start - 1 - last_provide[eid]) as f64;
         v[10] = (-age / 5.0).exp();
@@ -272,7 +289,7 @@ pub fn graph_score(ctx: &Ctx, store: &mut dyn GraphStore, space: u8, p: &GraphPa
     }
     // Session graph: co-occurrence with focus entities in earlier steps.
     let mut sess = HashMap::<u64, f64>::new();
-    for j in 0..cp.t {
+    for j in 0..if p.use_session { cp.t } else { 0 } {
         let ents: Vec<&Ent> = infos[j].all_entities().into_iter().collect();
         if ents.len() < 2 {
             continue;

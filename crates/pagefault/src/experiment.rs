@@ -36,7 +36,10 @@ pub fn prepare(sessions: Vec<Session>) -> Vec<Prepared> {
 
 /// Hold out every `test_every`-th issue (by instance number). Test sessions are
 /// different issues from anything in the training stream.
-pub fn split(repo: &str, mut all: Vec<Prepared>, cfg: &SimCfg, test_every: usize, max_test: usize, max_train: usize, per_instance: usize) -> RepoSplit {
+/// With `keep_empty` false, test sessions where nothing is ever re-fetched after a
+/// compaction are skipped (every arm scores zero faults on them).
+#[allow(clippy::too_many_arguments)]
+pub fn split(repo: &str, mut all: Vec<Prepared>, cfg: &SimCfg, test_every: usize, max_test: usize, max_train: usize, per_instance: usize, keep_empty: bool) -> RepoSplit {
     all.sort_by(|a, b| a.session.instance_number().cmp(&b.session.instance_number()).then(a.session.id.cmp(&b.session.id)));
     let mut instances: Vec<String> = all.iter().map(|p| p.session.instance_id.clone()).collect();
     instances.dedup();
@@ -52,7 +55,7 @@ pub fn split(repo: &str, mut all: Vec<Prepared>, cfg: &SimCfg, test_every: usize
                 continue;
             }
             let cps = compaction_points(&p.infos, cfg);
-            if cps.iter().all(|c| c.needed.is_empty()) {
+            if cps.is_empty() || (!keep_empty && cps.iter().all(|c| c.needed.is_empty())) {
                 continue;
             }
             *c += 1;
@@ -89,7 +92,7 @@ impl Point {
     }
 }
 
-pub const ARMS: [&str; 6] = ["recency", "bm25", "graph_session", "graph_static", "graph_learned", "oracle"];
+pub const ARMS: [&str; 8] = ["recency", "bm25", "graph_session", "kv_learned", "weights_only", "graph_static", "graph_learned", "oracle"];
 
 /// Fill whatever budget a policy left unused with the newest evicted steps, so
 /// every arm spends the same number of tokens.
@@ -110,6 +113,8 @@ pub struct ArmStores<'a> {
     pub stat: (&'a mut dyn GraphStore, u8),
     pub learned: (&'a mut dyn GraphStore, u8),
     pub learned_params: GraphParams,
+    /// Ablation arms that never touch the repo graph: params and entity-id space.
+    pub extra: BTreeMap<String, (GraphParams, u8)>,
 }
 
 pub fn run_arm(
@@ -140,6 +145,12 @@ pub fn run_arm(
             let (store, space) = (&mut *stores.learned.0, stores.learned.1);
             let s = graph_score(&ctx, store, space, &stores.learned_params)?;
             select_scored(&ctx, &s, space)
+        }
+        "kv_learned" | "weights_only" => {
+            let (p, space) = stores.extra.get(arm).ok_or_else(|| anyhow::anyhow!("arm {arm} not trained"))?;
+            let mut dummy = crate::graph::MemStore::default();
+            let s = graph_score(&ctx, &mut dummy, *space, p)?;
+            select_scored(&ctx, &s, *space)
         }
         other => anyhow::bail!("unknown arm {other}"),
     };
@@ -203,6 +214,12 @@ pub fn learning_curve(
     let order = order_for_seed(split.train.len(), seed);
     let mut stat = Learner::new(stat_space, &split.repo, false);
     let mut learned = Learner::new(learned_space, &split.repo, true);
+    // Ablations: learned weights without the HydraDB repo graph, and a plain
+    // key-value fault counter with no graph at all.
+    let no_repo = GraphParams { use_repo: false, ..Default::default() };
+    let mut weights_only = Learner::with_params(100, &split.repo, no_repo.clone(), false);
+    let mut kv = Learner::with_params(101, &split.repo, GraphParams { use_session: false, ..no_repo }, true);
+    let (mut wo_store, mut kv_store) = (crate::graph::MemStore::default(), crate::graph::MemStore::default());
     let mut curves: BTreeMap<String, Vec<Point>> = BTreeMap::new();
     let mut ingested = 0usize;
     // Arms that do not depend on training are evaluated once.
@@ -213,10 +230,15 @@ pub fn learning_curve(
             let p = &split.train[order[ingested]];
             stat.ingest(&p.infos, p.session.resolved, cfg, stat_store)?;
             learned.ingest(&p.infos, p.session.resolved, cfg, learned_store)?;
+            weights_only.ingest(&p.infos, p.session.resolved, cfg, &mut wo_store)?;
+            kv.ingest(&p.infos, p.session.resolved, cfg, &mut kv_store)?;
             ingested += 1;
         }
-        let mut stores = ArmStores { stat: (stat_store, stat_space), learned: (learned_store, learned_space), learned_params: learned.params.clone() };
-        let mut res = evaluate(split, cfg, &["graph_static", "graph_learned"], &mut stores)?;
+        let mut extra = BTreeMap::new();
+        extra.insert("weights_only".to_string(), (weights_only.params.clone(), 100u8));
+        extra.insert("kv_learned".to_string(), (kv.params.clone(), 101u8));
+        let mut stores = ArmStores { stat: (stat_store, stat_space), learned: (learned_store, learned_space), learned_params: learned.params.clone(), extra };
+        let mut res = evaluate(split, cfg, &["graph_static", "graph_learned", "weights_only", "kv_learned"], &mut stores)?;
         if fixed.is_none() {
             fixed = Some(evaluate(split, cfg, &["recency", "bm25", "graph_session", "oracle"], &mut stores)?);
         }

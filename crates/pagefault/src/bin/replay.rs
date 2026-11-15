@@ -29,6 +29,9 @@ struct Args {
     max_test: usize,
     #[arg(long, default_value_t = 12)]
     per_instance: usize,
+    /// Also keep held-out sessions where nothing is re-fetched after a compaction.
+    #[arg(long)]
+    keep_empty_tests: bool,
     #[arg(long, default_value_t = 1500)]
     max_train: usize,
     #[arg(long, default_value_t = 8000)]
@@ -61,7 +64,7 @@ fn main() -> anyhow::Result<()> {
             path = a.data_dir.join(format!("{repo}.jsonl.gz"));
         }
         let sessions = load_sessions(&path)?;
-        let sp = split(repo, prepare(sessions), &cfg, a.test_every, a.max_test, a.max_train, a.per_instance);
+        let sp = split(repo, prepare(sessions), &cfg, a.test_every, a.max_test, a.max_train, a.per_instance, a.keep_empty_tests);
         let test_cps: usize = sp.test.iter().map(|t| t.1.len()).sum();
         eprintln!("[{repo}] train={} test={} test_compactions={} store={}", sp.train.len(), sp.test.len(), test_cps, a.store);
         let mut rr = RepoResult { repo: repo.clone(), train_sessions: sp.train.len(), test_sessions: sp.test.len(), test_compactions: test_cps, ..Default::default() };
@@ -91,6 +94,7 @@ fn main() -> anyhow::Result<()> {
     let out = serde_json::json!({
         "config": cfg,
         "store": a.store,
+        "keep_empty_tests": a.keep_empty_tests,
         "checkpoints": a.checkpoints,
         "seeds": a.seeds,
         "repos": results,

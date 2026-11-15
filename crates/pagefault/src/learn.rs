@@ -27,6 +27,9 @@ pub struct Learner {
     pub updates: usize,
     pub sessions: usize,
     pub stats: LearnStats,
+    /// Keep a plain per-entity page-fault counter in `params.kv` (ablation).
+    pub kv: bool,
+    pub need_count: HashMap<u64, f64>,
 }
 
 #[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
@@ -53,7 +56,17 @@ impl Learner {
             updates: 0,
             sessions: 0,
             stats: LearnStats::default(),
+            kv: false,
+            need_count: HashMap::new(),
         }
+    }
+
+    /// A learner for an ablation arm: same online learning, different features.
+    pub fn with_params(space: u8, repo: &str, params: GraphParams, kv: bool) -> Self {
+        let mut l = Learner::new(space, repo, true);
+        l.params = params;
+        l.kv = kv;
+        l
     }
 
     fn id(&self, e: &Ent) -> u64 {
@@ -95,7 +108,14 @@ impl Learner {
                 self.learn_point(infos, cp, cfg, store, &mut dirty)?;
             }
             self.fixed_by(infos, resolved, &mut dirty);
-            // Make this session's updates visible before the structural ingest.
+        }
+        if self.kv {
+            for cp in &cps {
+                for n in &cp.needed {
+                    *self.need_count.entry(self.id(&n.ent)).or_insert(0.0) += 1.0;
+                }
+            }
+            self.params.kv = Some(self.need_count.clone());
         }
 
         for s in infos {

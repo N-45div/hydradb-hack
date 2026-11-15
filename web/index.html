@@ -12,7 +12,7 @@
 :root {
   --bg: #0b0d12; --panel: #12151d; --panel2: #171b25; --line: #252a36; --text: #e7e9ee; --muted: #9aa1b2;
   --accent: #7c9cff; --good: #3ecf8e; --warn: #f5a524; --bad: #f2555a;
-  --c-recency: #9aa1b2; --c-bm25: #b07cff; --c-session: #4fc3f7; --c-static: #f5a524; --c-learned: #3ecf8e; --c-oracle: #5b6275;
+  --c-recency: #9aa1b2; --c-bm25: #b07cff; --c-session: #4fc3f7; --c-static: #f5a524; --c-kv: #ff7ab6; --c-wo: #9ccc65; --c-learned: #3ecf8e; --c-oracle: #5b6275;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 Inter, system-ui, sans-serif; }
@@ -127,6 +127,8 @@ const ARMS = [
   ["recency", "Keep most recent (truncation)", "--c-recency"],
   ["bm25", "Flat store + keyword search", "--c-bm25"],
   ["graph_session", "Session graph only", "--c-session"],
+  ["kv_learned", "Plain KV store + learning (no graph)", "--c-kv"],
+  ["weights_only", "Learning, no HydraDB repo graph", "--c-wo"],
   ["graph_static", "Repo graph, no learning", "--c-static"],
   ["graph_learned", "pagefault (graph + learning)", "--c-learned"],
   ["oracle", "Oracle (knows the future)", "--c-oracle"],

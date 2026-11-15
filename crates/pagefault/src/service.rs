@@ -84,7 +84,7 @@ impl Demo {
             fixed: BTreeMap::new(),
             curve: Vec::new(),
         };
-        let mut stores = ArmStores { stat: (d.stat_store.as_mut(), 120), learned: (d.learned_store.as_mut(), 121), learned_params: d.learned.params.clone() };
+        let mut stores = ArmStores { stat: (d.stat_store.as_mut(), 120), learned: (d.learned_store.as_mut(), 121), learned_params: d.learned.params.clone(), extra: BTreeMap::new() };
         d.fixed = evaluate(&d.split, &d.cfg, &["recency", "bm25", "oracle"], &mut stores)?;
         d.point()?;
         Ok(d)
@@ -95,6 +95,7 @@ impl Demo {
             stat: (self.stat_store.as_mut(), 120),
             learned: (self.learned_store.as_mut(), 121),
             learned_params: self.learned.params.clone(),
+            extra: BTreeMap::new(),
         };
         let mut res = evaluate(&self.split, &self.cfg, &["graph_static", "graph_learned"], &mut stores)?;
         res.extend(self.fixed.clone());
