@@ -202,7 +202,7 @@ function drawCurve() {
   const m = document.getElementById("metric").value;
   const xs = repo.curves.recency[0].map(p => p.sessions);
   document.getElementById("meta").textContent =
-    `${repo.test_sessions} held-out sessions · ${repo.test_compactions} compactions · ${run.data.seeds} training orders · graph store: ${storeName(run.data.store)}`;
+    `${repo.test_sessions} held-out sessions · ${repo.test_compactions} compactions · ${run.data.seeds} training order${run.data.seeds === 1 ? "" : "s"} · graph store: ${storeName(run.data.store)}`;
   const ds = [];
   for (const [k, label, col] of ARMS) {
     if (!repo.curves[k]) continue;
