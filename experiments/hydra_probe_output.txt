@@ -1,15 +1,15 @@
 
 === clear
-{"query_id": "http-query-558", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:0"}
+{"query_id": "http-query-565", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:0"}
 
 === upsert vertices with lbl/repo/faults
-{"query_id": "http-query-561", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:1"}
+{"query_id": "http-query-568", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:1"}
 
 === edge CO
-{"query_id": "http-query-573", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:2"}
+{"query_id": "http-query-580", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:2"}
 
 === edge CO
-{"query_id": "http-query-584", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:3"}
+{"query_id": "http-query-592", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:3"}
 
 === edge NEXT
 {"query_id": "http-query-593", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:4"}
@@ -77,8 +77,20 @@
 === re-upsert again (second time)
 {"query_id": "http-query-614", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:12"}
 
+=== write with client query_id
+{"query_id": "pf-probe-boot1-1", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:13"}
+
+=== edge write with client query_id
+{"query_id": "pf-probe-boot1-2", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:14"}
+
+=== same query_id, different payload (conflict expected?)
+{"http_error": 500, "body": "{\"error\":{\"code\":\"internal\",\"message\":\"internal query execution error\"}}"}
+
+=== read with client query_id, small pages
+{"query_id": "pf-probe-boot1-3", "columns": ["id"], "rows": [[{"type": "vertex_id", "value": 900001}], [{"type": "vertex_id", "value": 900002}]], "read_epoch": 14, "next_cursor": 1, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:14"}
+
 === clear
-{"query_id": "http-query-615", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:13"}
+{"query_id": "http-query-615", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:15"}
 
 === clear meta
-{"query_id": "http-query-616", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:14"}
+{"query_id": "http-query-616", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:16"}
