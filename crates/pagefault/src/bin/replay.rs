@@ -17,6 +17,9 @@ struct Args {
     checkpoints: Vec<usize>,
     #[arg(long, default_value_t = 3)]
     seeds: u64,
+    /// Run only this training order (for parallel jobs; results are merged later).
+    #[arg(long)]
+    seed: Option<u64>,
     #[arg(long, default_value = "memory")]
     store: String,
     #[arg(long, env = "HYDRADB_URL", default_value = "http://127.0.0.1:8443")]
@@ -68,7 +71,11 @@ fn main() -> anyhow::Result<()> {
         let test_cps: usize = sp.test.iter().map(|t| t.1.len()).sum();
         eprintln!("[{repo}] train={} test={} test_compactions={} store={}", sp.train.len(), sp.test.len(), test_cps, a.store);
         let mut rr = RepoResult { repo: repo.clone(), train_sessions: sp.train.len(), test_sessions: sp.test.len(), test_compactions: test_cps, ..Default::default() };
-        for seed in 0..a.seeds {
+        let seed_list: Vec<u64> = match a.seed {
+            Some(s) => vec![s],
+            None => (0..a.seeds).collect(),
+        };
+        for seed in seed_list {
             let mut s1 = make_store(&a)?;
             let mut s2 = make_store(&a)?;
             let mut s3 = make_store(&a)?;
@@ -100,6 +107,7 @@ fn main() -> anyhow::Result<()> {
         "keep_empty_tests": a.keep_empty_tests,
         "checkpoints": a.checkpoints,
         "seeds": a.seeds,
+        "seed": a.seed,
         "repos": results,
     });
     std::fs::write(&a.out, serde_json::to_string_pretty(&out)?)?;
