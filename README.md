@@ -52,10 +52,10 @@ We replay real SWE-agent runs ([nebius/SWE-agent-trajectories](https://huggingfa
 | Flat store + keyword search (BM25) | 0.577 | 0.961 | 0.877 |
 | Session graph only, no learning | 0.360 | 0.603 | 0.460 |
 | Repo graph in HydraDB, no learning | 0.360 → 0.352 | 0.603 → 0.569 | 0.460 → 0.449 |
-| Plain key-value fault counter + learning (no graph) | 0.336 → 0.188 ±0.017 | 0.608 → 0.345 ±0.015 | 0.504 → 0.420 ±0.028 |
-| Learning, session graph, no HydraDB repo graph | 0.360 → 0.178 ±0.006 | 0.603 → 0.353 ±0.015 | 0.460 → 0.412 ±0.026 |
-| HydraDB repo graph + learning | 0.360 → 0.170 ±0.007 | 0.603 → 0.331 ±0.016 | 0.460 → 0.404 ±0.024 |
-| **pagefault: HydraDB repo graph + KV counter + learning** | **0.360 → 0.163 ±0.016** | **0.603 → 0.335 ±0.016** | **0.460 → 0.392 ±0.024** |
+| Plain key-value fault counter + learning (no graph) | 0.336 → 0.188 ±0.017 | 0.608 → 0.344 ±0.013 | 0.504 → 0.420 ±0.028 |
+| Learning, session graph, no HydraDB repo graph | 0.360 → 0.178 ±0.006 | 0.603 → 0.353 ±0.015 | 0.460 → 0.411 ±0.027 |
+| HydraDB repo graph + learning | 0.360 → 0.170 ±0.007 | 0.603 → 0.330 ±0.015 | 0.460 → 0.404 ±0.024 |
+| **pagefault: HydraDB repo graph + KV counter + learning** | **0.360 → 0.164 ±0.015** | **0.603 → 0.334 ±0.015** | **0.460 → 0.393 ±0.026** |
 | Oracle (knows the future) | 0.016 | 0.065 | 0.112 |
 
 **Unfiltered.** All held-out sessions with a compaction, including ones where nothing was ever re-fetched (`results/unfiltered/`). Every rate drops because most compactions cost nothing, but the ranking holds:
@@ -64,14 +64,14 @@ We replay real SWE-agent runs ([nebius/SWE-agent-trajectories](https://huggingfa
 |---|---|---|---|
 | Keep most recent | 0.110 | 0.193 | 0.137 |
 | Plain key-value fault counter + learning | 0.050 | 0.117 | 0.086 |
-| **pagefault** | **0.040** | **0.118** | **0.079** |
+| **pagefault** | **0.040** | **0.118** | **0.080** |
 
 What this shows, plainly:
 - **Learning from page faults is the main lever.** pagefault has 59%, 39% and 36% fewer faults than truncation, winning on all 5 training orders in every repo. Accumulating graph structure without learning barely moves (0.360 → 0.352).
-- **The HydraDB graph adds a real, mostly consistent gain on top.** The fair test is pagefault against the same learner on a plain key-value fault counter. The graph cuts faults by a further **13% on pydantic and 7% on dvc (5/5 orders each)**, and 2.5% on sqlglot (3/5). Unfiltered, it's 20% and 8% (5/5), and −1% on sqlglot. Most of the gain comes from two-hop semantic chains that HydraDB's `MSpaths` finds, such as command → error → the file that fixed it; a counter can't express these. Every restore also shows the path that pulled it in. A flat keyword store is the worst policy everywhere.
+- **The HydraDB graph adds a real, mostly consistent gain on top.** The fair test is pagefault against the same learner on a plain key-value fault counter. The graph cuts faults by a further **13% on pydantic and 6% on dvc (5/5 orders each)**, and 3% on sqlglot (3/5). Unfiltered, it's 20% and 7% (5/5), and −1% on sqlglot. Most of the gain comes from two-hop semantic chains that HydraDB's `MSpaths` finds, such as command → error → the file that fixed it; a counter can't express these. Every restore also shows the path that pulled it in. A flat keyword store is the worst policy everywhere.
 - **It's real continual learning.** Faults fall as sessions are learned, on held-out issues, across 5 training orders. See the live chart at `/`.
 
-**Where these numbers come from.** The benchmark runs against HydraDB in CI: the `hydra-bench` workflow starts one HydraDB graph-node per job and replays 3 repos × 5 training orders on it, with traversal done by `algo.MSpaths` and `algo.degree`. For fast iteration, the same code also runs on an in-memory mirror that implements the same store contract (`MemStore`). On pydantic, the HydraDB run and the mirror agree at every checkpoint for pagefault. The dashboard labels every result with the store that produced it ("graph store: HydraDB" or "in-memory mirror").
+**Where these numbers come from.** The benchmark runs against HydraDB in CI: the `hydra-bench` workflow starts one HydraDB graph-node per job and replays 3 repos × 5 training orders on it, with traversal done by `algo.MSpaths` and `algo.degree`. Every table and chart above comes from those HydraDB runs (`results/*.json`). For fast iteration, the same code also runs on an in-memory mirror that implements the same store contract (`MemStore`). Its results (`results/memory/`) agree with HydraDB to within 0.001 faults per compaction. The dashboard labels every result with the store that produced it ("graph store: HydraDB" or "in-memory mirror").
 
 ### Against summary compaction
 
