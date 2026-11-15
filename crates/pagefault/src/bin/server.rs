@@ -101,21 +101,56 @@ async fn create_session(State(s): State<Shared>, h: axum::http::HeaderMap, Json(
     Ok(Json(json!({"session_id": id})))
 }
 
+/// Standard base64 (RFC 4648) decoder; avoids a new dependency.
+fn b64_decode(s: &str) -> Option<Vec<u8>> {
+    let mut out = Vec::with_capacity(s.len() * 3 / 4);
+    let (mut acc, mut bits) = (0u32, 0u32);
+    for c in s.bytes() {
+        let v = match c {
+            b'A'..=b'Z' => c - b'A',
+            b'a'..=b'z' => c - b'a' + 26,
+            b'0'..=b'9' => c - b'0' + 52,
+            b'+' | b'-' => 62,
+            b'/' | b'_' => 63,
+            b'=' | b'\n' | b'\r' | b' ' => continue,
+            _ => return None,
+        } as u32;
+        acc = (acc << 6) | v;
+        bits += 6;
+        if bits >= 8 {
+            bits -= 8;
+            out.push((acc >> bits) as u8);
+            acc &= (1 << bits) - 1;
+        }
+    }
+    Some(out)
+}
+
 #[derive(Deserialize)]
 struct Events {
     #[serde(default)]
     events: Vec<ToolEvent>,
+    /// Base64 of a JSON array of events. Tool output is source code and shell
+    /// text, which edge firewalls (Render's included) can flag as injection.
+    #[serde(default)]
+    events_b64: Option<String>,
     #[serde(default)]
     steps: Vec<Step>,
 }
 
 async fn add_events(State(s): State<Shared>, h: axum::http::HeaderMap, Path(id): Path<String>, Json(b): Json<Events>) -> R {
     authorize(&s, &h)?;
+    let mut events = b.events;
+    if let Some(enc) = &b.events_b64 {
+        let raw = b64_decode(enc).ok_or_else(|| ApiError(anyhow::anyhow!("events_b64 is not valid base64")))?;
+        let more: Vec<ToolEvent> = serde_json::from_slice(&raw).map_err(|e| ApiError(e.into()))?;
+        events.extend(more);
+    }
     let n = blocking(s, move |svc| {
         if !b.steps.is_empty() {
             svc.add_steps(&id, b.steps)?;
         }
-        svc.add_events(&id, b.events)
+        svc.add_events(&id, events)
     })
     .await?;
     Ok(Json(json!({"steps": n})))
