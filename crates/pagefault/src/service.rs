@@ -75,7 +75,7 @@ impl Demo {
         let repo = split.repo.clone();
         let mut d = Demo {
             stat: Learner::new(120, &repo, false),
-            learned: Learner::new(121, &repo, true),
+            learned: Learner::with_params(121, &repo, crate::policy::GraphParams::default(), true),
             split,
             cfg,
             stat_store,
@@ -158,7 +158,7 @@ impl Service {
 
     fn learner(&mut self, repo: &str) -> &mut Learner {
         let space = self.space;
-        self.learners.entry(repo.to_string()).or_insert_with(|| Learner::new(space, repo, true))
+        self.learners.entry(repo.to_string()).or_insert_with(|| Learner::with_params(space, repo, crate::policy::GraphParams::default(), true))
     }
 
     pub fn create_session(&mut self, repo: &str, harness: &str, model: &str, root: &str) -> String {
@@ -349,7 +349,8 @@ impl Service {
     pub fn end(&mut self, id: &str, resolved: bool) -> anyhow::Result<LearnStats> {
         let s = self.sessions.remove(id).ok_or_else(|| anyhow::anyhow!("unknown session {id}"))?;
         let cfg = self.cfg.clone();
-        let learner = self.learners.entry(s.repo.clone()).or_insert_with(|| Learner::new(self.space, &s.repo, true));
+        let space = self.space;
+        let learner = self.learners.entry(s.repo.clone()).or_insert_with(|| Learner::with_params(space, &s.repo, crate::policy::GraphParams::default(), true));
         learner.ingest(&s.infos, resolved, &cfg, self.store.as_mut())?;
         Ok(learner.stats.clone())
     }

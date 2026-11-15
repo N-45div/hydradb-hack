@@ -69,14 +69,21 @@ footer { color: var(--muted); padding: 30px 0 60px; font-size: 13px; }
   <div class="row">
     <select id="repo"></select>
     <select id="metric">
-      <option value="recall">Recall of needed context (higher is better)</option>
       <option value="faults_per_compaction">Page faults per compaction (lower is better)</option>
+      <option value="recall">Recall of needed context (higher is better)</option>
       <option value="rework_tokens_per_compaction">Re-work tokens per compaction (lower is better)</option>
     </select>
     <span class="status" id="meta"></span>
   </div>
   <div class="chart"><canvas id="curve"></canvas></div>
   <div class="scroll" style="margin-top:14px"><table id="table"></table></div>
+</section>
+
+<section>
+  <h2>Against summary compaction</h2>
+  <p class="sub">The same held-out pydantic compactions, with an LLM writing an OpenCode-template summary of the evicted history at the same token budget. Scoring is generous to the summary: it gets credit for merely <em>mentioning</em> a file, search or command the agent needed. pagefault gets credit only when a restored step shows it.</p>
+  <div class="chart" style="height:220px"><canvas id="llm"></canvas></div>
+  <p class="status" id="llmMeta"></p>
 </section>
 
 <section>
@@ -130,8 +137,8 @@ const ARMS = [
   ["kv_learned", "Plain KV store + learning (no graph)", "--c-kv"],
   ["weights_only", "Learning, no HydraDB repo graph", "--c-wo"],
   ["graph_static", "Repo graph, no learning", "--c-static"],
-  ["graph_learned", "pagefault (graph + learning)", "--c-learned"],
-  ["graph_kv_learned", "pagefault + KV counter", "--c-gkv"],
+  ["graph_learned", "Repo graph + learning (no KV counter)", "--c-gkv"],
+  ["graph_kv_learned", "pagefault: repo graph + KV counter + learning", "--c-learned"],
   ["oracle", "Oracle (knows the future)", "--c-oracle"],
 ];
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -139,7 +146,7 @@ const fmt = (x, m) => m === "recall" ? (x * 100).toFixed(1) + "%" : m === "fault
 Chart.defaults.color = css("--muted");
 Chart.defaults.borderColor = css("--line");
 Chart.defaults.font.family = "Inter";
-let RES = [], curveChart, liveChart, wChart;
+let RES = [], LLM = null, curveChart, liveChart, wChart, llmChart;
 
 function stats(curves, i, m) {
   const v = curves.map(c => c[i] ? c[i][m] : null).filter(x => x !== null);
@@ -150,27 +157,40 @@ function stats(curves, i, m) {
 
 function kpis() {
   const el = document.getElementById("kpis");
-  const memRuns = RES.filter(r => r.data.store === "memory").flatMap(r => r.data.repos);
-  if (!memRuns.length) return;
-  let rows = memRuns.map(r => {
-    const c = r.curves, last = c.graph_learned[0].length - 1;
-    return {
-      repo: r.repo,
-      f0: stats(c.recency, 0, "faults_per_compaction")[0],
-      fs: stats(c.graph_static, last, "faults_per_compaction")[0],
-      fl: stats(c.graph_learned, last, "faults_per_compaction")[0],
-      r0: stats(c.graph_learned, 0, "recall")[0], rl: stats(c.graph_learned, last, "recall")[0],
-    };
-  });
+  const runs = RES.filter(r => r.data.store === "memory" && !r.data.keep_empty_tests).flatMap(r => r.data.repos)
+    .filter(r => r.curves.graph_kv_learned);
+  if (!runs.length) return;
+  const fin = (c, a) => stats(c[a], c[a][0].length - 1, "faults_per_compaction")[0];
+  const rows = runs.map(r => ({ repo: r.repo, rec: fin(r.curves, "recency"), kv: fin(r.curves, "kv_learned"), pf: fin(r.curves, "graph_kv_learned") }));
   const avg = k => rows.reduce((a, r) => a + r[k], 0) / rows.length;
-  const cutVsRecency = 1 - avg("fl") / avg("f0");
-  const cutVsStatic = 1 - avg("fl") / avg("fs");
-  const best = rows.reduce((a, b) => (b.rl - b.r0 > a.rl - a.r0 ? b : a));
+  const pct = x => `${x > 0 ? "−" : "+"}${Math.abs(x * 100).toFixed(0)}%`;
+  let llm = "";
+  if (LLM) {
+    const a = LLM.data.arms;
+    llm = `<div class="kpi"><b>${pct(1 - a.pagefault.faults_per_compaction / a.summary.faults_per_compaction)}</b><small>page faults vs an OpenCode-style LLM summary at the same budget (pydantic)</small></div>
+      <div class="kpi"><b>${pct(1 - a["summary+pf"].faults_per_compaction / a.summary.faults_per_compaction)}</b><small>summary + pagefault together vs the summary alone</small></div>`;
+  }
   el.innerHTML = `
-    <div class="kpi"><b>−${(cutVsRecency * 100).toFixed(0)}%</b><small>page faults vs keep-most-recent, avg over ${rows.length} repos</small></div>
-    <div class="kpi"><b>−${(cutVsStatic * 100).toFixed(0)}%</b><small>page faults vs the same graph without learning</small></div>
-    <div class="kpi"><b>${(best.r0 * 100).toFixed(0)}% → ${(best.rl * 100).toFixed(0)}%</b><small>recall as the graph learns (${best.repo.split("__")[1]})</small></div>
-    <div class="kpi"><b>0 LLM calls</b><small>extraction, retrieval and learning are deterministic Rust</small></div>`;
+    <div class="kpi"><b>${pct(1 - avg("pf") / avg("rec"))}</b><small>page faults vs keep-most-recent, avg over ${rows.length} repos, held-out issues</small></div>
+    ${llm}
+    <div class="kpi"><b>${pct(1 - avg("pf") / avg("kv"))}</b><small>what the HydraDB graph adds on top of a plain key-value learner (honest: modest)</small></div>`;
+}
+
+function drawLLM() {
+  if (!LLM) return;
+  const a = LLM.data.arms, d = LLM.data;
+  const order = [["recency", "Keep most recent", "--c-recency"], ["summary", "LLM summary", "--c-bm25"],
+    ["pagefault", "pagefault", "--c-learned"], ["summary+pf", "Summary + pagefault", "--c-gkv"]];
+  llmChart?.destroy();
+  llmChart = new Chart(document.getElementById("llm"), {
+    type: "bar",
+    data: { labels: order.map(o => o[1]), datasets: [{ label: "page faults per compaction", data: order.map(o => a[o[0]].faults_per_compaction), backgroundColor: order.map(o => css(o[2])) }] },
+    options: { indexAxis: "y", maintainAspectRatio: false, plugins: { legend: { display: false },
+      tooltip: { callbacks: { label: c => `${c.parsed.x.toFixed(3)} faults · recall ${(a[order[c.dataIndex][0]].recall * 100).toFixed(1)}%` } } },
+      scales: { x: { title: { display: true, text: "page faults per compaction (lower is better)" } } } }
+  });
+  document.getElementById("llmMeta").textContent =
+    `${a.summary.compactions} held-out compactions · summarizer ${d.model} · ${d.budget_tokens}-token budget for every arm · summary took ${d.summary_latency_seconds.p50.toFixed(1)} s median and about ${Math.round(d.llm_tokens.prompt_tokens / (2 * a.summary.compactions) / 100) * 100} prompt tokens per call; pagefault ~0.2 s, no LLM.`;
 }
 
 function drawCurve() {
@@ -178,7 +198,7 @@ function drawCurve() {
   const run = RES.find(r => r.file === sel[0]);
   const repo = run.data.repos.find(r => r.repo === sel[1]);
   const m = document.getElementById("metric").value;
-  const xs = repo.curves.graph_learned[0].map(p => p.sessions);
+  const xs = repo.curves.recency[0].map(p => p.sessions);
   document.getElementById("meta").textContent =
     `${repo.test_sessions} held-out sessions · ${repo.test_compactions} compactions · ${run.data.seeds} seeds · store: ${run.data.store}`;
   const ds = [];
@@ -186,11 +206,11 @@ function drawCurve() {
     if (!repo.curves[k]) continue;
     const s = xs.map((_, i) => stats(repo.curves[k], i, m));
     const c = css(col);
-    if (k === "graph_learned" || k === "graph_static") {
+    if (k === "graph_kv_learned" || k === "kv_learned") {
       ds.push({ label: "_hi" + k, data: s.map(v => v[0] + v[1]), borderColor: "transparent", backgroundColor: c + "26", pointRadius: 0, fill: "+1" });
       ds.push({ label: "_lo" + k, data: s.map(v => v[0] - v[1]), borderColor: "transparent", pointRadius: 0, fill: false });
     }
-    ds.push({ label, data: s.map(v => v[0]), borderColor: c, backgroundColor: c, borderWidth: k === "graph_learned" ? 3 : 2,
+    ds.push({ label, data: s.map(v => v[0]), borderColor: c, backgroundColor: c, borderWidth: k === "graph_kv_learned" ? 3 : 2,
       borderDash: k === "oracle" ? [5, 5] : [], pointRadius: 3, tension: 0.25, fill: false });
   }
   curveChart?.destroy();
@@ -215,7 +235,8 @@ function drawCurve() {
 
 async function loadResults() {
   const r = await fetch("/v1/results").then(r => r.json());
-  RES = r.results;
+  RES = r.results.filter(x => x.data && x.data.repos);
+  LLM = r.results.find(x => x.data && x.data.arms && x.data.model);
   const sel = document.getElementById("repo");
   sel.innerHTML = RES.flatMap(run => run.data.repos.map(rp =>
     `<option value="${run.file}|${rp.repo}">${rp.repo.replace("__", "/")} · ${run.data.store}</option>`)).join("");
@@ -223,6 +244,7 @@ async function loadResults() {
   if (pick) sel.value = pick.value;
   kpis();
   drawCurve();
+  drawLLM();
 }
 
 function drawDemo(d) {
@@ -235,7 +257,8 @@ function drawDemo(d) {
     `${d.ingested}/${d.train} training sessions ingested · ${d.test} held-out sessions · faults seen ${d.stats.faults_seen} · NEXT edges ${d.stats.next_created}`;
   const xs = d.curve.map(p => p.graph_learned.sessions);
   const pick = ["recency", "graph_static", "graph_learned", "oracle"];
-  const ds = ARMS.filter(a => pick.includes(a[0])).map(([k, label, col]) => ({
+  const live = { graph_learned: ["pagefault (learning live on HydraDB)", "--c-learned"] };
+  const ds = ARMS.filter(a => pick.includes(a[0])).map(([k, label, col]) => [k, ...(live[k] || [label, col])]).map(([k, label, col]) => ({
     label, data: d.curve.map(p => p[k].recall), borderColor: css(col), backgroundColor: css(col),
     borderWidth: k === "graph_learned" ? 3 : 2, borderDash: k === "oracle" ? [5, 5] : [], tension: .25, pointRadius: 3 }));
   liveChart?.destroy();

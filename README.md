@@ -32,44 +32,69 @@ It's also:
 - **Learned** per repo.
 - **Inspectable:** every kept step comes with its graph path.
 - **Model-agnostic**, local models included.
-- **Fast:** zero LLM calls, about 180 ms median versus OpenCode's 30–60 s summary.
+- **Fast:** zero LLM calls, about 0.2 s versus 5 s for a summary from a small model (OpenCode budgets 30–60 s for its own).
 
-Honest gap: our baselines replay truncation, keyword search and the graph. We haven't yet run an LLM-summary arm (OpenCode's template on the same replays), which needs an LLM key. It's the next experiment.
+We measured it: on the same held-out compactions, an OpenCode-template summary written by `gpt-5.4-mini` leaves **twice as many page faults** as pagefault, even when the summary gets credit for merely mentioning a file. **Summary and pagefault together cut faults by 80%** compared with the summary alone (see [Against summary compaction](#against-summary-compaction)).
 
 ## Results
 
 We replay real SWE-agent runs ([nebius/SWE-agent-trajectories](https://huggingface.co/datasets/nebius/SWE-agent-trajectories), CC-BY-4.0) with an 8k-token context limit, the regime local models live in.
 - At every compaction, each policy keeps the same 2k-token budget of evicted history.
 - A **page fault** is the agent, in the next 20 steps, re-opening a file, repeating a search, or re-running an *unchanged* command that an evicted step had already shown. Re-running after an edit is not counted.
-- **Held out:** test sessions are different GitHub issues from anything the graph learned from. The test set keeps only sessions with at least one re-fetch after a compaction, so the rates are *per compaction in sessions where compaction cost something*. Sessions where nothing was ever re-fetched would lower every arm's fault rate equally.
+- **Held out:** test sessions are different GitHub issues from anything the graph learned from.
 - **Not a one-off:** 5 different training orders; ± is the std.
 
-Page faults per compaction (lower is better), before learning → after the graph has ingested the repo's training sessions:
+**Main table.** Page faults per compaction (lower is better), before learning → after ingesting the repo's training sessions. This test set keeps the held-out sessions where at least one re-fetch happened after a compaction:
 
 | Policy | pydantic (253 compactions) | sqlglot (232) | dvc (276) |
 |---|---|---|---|
 | Keep most recent (truncation, the usual default) | 0.395 | 0.547 | 0.616 |
 | Flat store + keyword search (BM25) | 0.577 | 0.961 | 0.877 |
-| Session graph only | 0.360 | 0.603 | 0.460 |
+| Session graph only, no learning | 0.360 | 0.603 | 0.460 |
 | Repo graph in HydraDB, no learning | 0.360 → 0.344 | 0.603 → 0.582 | 0.460 → 0.453 |
-| **pagefault: repo graph + learning** | **0.360 → 0.171** | **0.603 → 0.336** | **0.460 → 0.407** |
+| Plain key-value fault counter + learning (no graph) | 0.336 → 0.188 ±0.017 | 0.608 → 0.345 ±0.015 | 0.504 → 0.420 ±0.028 |
+| Learning, session graph, no HydraDB repo graph | 0.360 → 0.178 ±0.006 | 0.603 → 0.353 ±0.015 | 0.460 → 0.412 ±0.026 |
+| HydraDB repo graph + learning | 0.360 → 0.170 ±0.011 | 0.603 → 0.336 ±0.007 | 0.460 → 0.407 ±0.023 |
+| **pagefault: HydraDB repo graph + KV counter + learning** | **0.360 → 0.168 ±0.014** | **0.603 → 0.335 ±0.017** | **0.460 → 0.401 ±0.025** |
 | Oracle (knows the future) | 0.016 | 0.065 | 0.112 |
 
-Recall of needed context: **pydantic 63% → 83% (±1.1)**, **sqlglot 52% → 73% (±0.6)**, dvc 61% → 65% (±1.9).
+**Unfiltered.** All held-out sessions with a compaction, including ones where nothing was ever re-fetched (`results/unfiltered/`). Every rate drops because most compactions cost nothing, but the ranking holds:
 
-What the baselines show:
-- **The graph matters.** On the same events, a flat keyword store is the worst policy everywhere. It would fall apart on a plain store.
-- **Learning matters.** Accumulating graph structure alone barely moves (0.360 → 0.344). Learning from page faults halves them on pydantic. On sqlglot the graph without learning *loses* to truncation; learning flips it.
-- **It's real continual learning.** The curve rises with the number of sessions learned, on held-out issues, across 5 training orders. See the live chart at `/`.
+| Policy | pydantic (725) | sqlglot (363) | dvc (906) |
+|---|---|---|---|
+| Keep most recent | 0.110 | 0.193 | 0.137 |
+| Plain key-value fault counter + learning | 0.050 | 0.117 | 0.086 |
+| **pagefault** | **0.041** | **0.120** | **0.082** |
 
-The pydantic run was repeated with HydraDB as the store (`results/pydantic_hydradb.json`) and tracks the in-memory run closely (seed 0: recall 0.632 → 0.842 on both; at the 800-session checkpoint 0.838 vs 0.834).
+What this shows, plainly:
+- **Learning from page faults is the main lever.** pagefault has 57%, 39% and 35% fewer faults than truncation, winning on all 5 training orders in every repo. Accumulating graph structure without learning barely moves (0.360 → 0.344).
+- **The HydraDB graph adds a modest, mostly consistent gain on top.** The fair test is pagefault against the same learner on a plain key-value fault counter. The graph cuts faults by a further 11%, 3% and 4% (winning on 4, 4 and 5 of 5 orders). Unfiltered, the gain is 18% and 5%, but −2% on sqlglot. The graph also gives every restore an explanation: the edge path that pulled it in. A flat keyword store is the worst policy everywhere.
+- **It's real continual learning.** Faults fall as sessions are learned, on held-out issues, across 5 training orders. See the live chart at `/`.
+
+The pydantic run was repeated with HydraDB as the store (`results/pydantic_hydradb.json`). It tracks the in-memory run closely (seed 0: recall 0.632 → 0.842 on both; at the 800-session checkpoint 0.838 vs 0.834).
+
+### Against summary compaction
+
+Every held-out pydantic compaction (253), at the same 2k-token budget. An LLM (`gpt-5.4-mini`, low reasoning effort) wrote an OpenCode-template summary of the evicted history ([`scripts/llm_summary_arm.py`](scripts/llm_summary_arm.py)). The scoring favours the summary: it gets credit when it merely **mentions** a needed file, search term or command. pagefault gets credit only when a restored step **shows** it.
+
+| Arm | Page faults per compaction | Recall | Time per compaction | LLM tokens |
+|---|---|---|---|---|
+| Keep most recent | 0.395 | 59.5% | none | 0 |
+| LLM summary (OpenCode template) | 0.324 | 66.8% | 5.2 s median | ~10k in, ~800 out |
+| **pagefault** | **0.154** | **84.2%** | ~0.2 s | 0 |
+| **Summary (1k) + pagefault (1k)** | **0.063** | **93.5%** | 5.2 s | ~10k |
+
+The summary keeps intent and pagefault keeps evidence, and the two stack. Results are in `results/llm_summary_pydantic.json`.
 
 Reproduce:
 ```bash
 python scripts/prepare_data.py --shards 0 1 2 3 4 5 6 --max-per-repo 2000   # ~630 MB download
-cargo run --release --bin replay -- --repos pydantic__pydantic --seeds 5 --store hydra   # or --store memory
+cargo run --release --bin replay -- --repos pydantic__pydantic --seeds 5 --store hydra   # or --store memory; add --keep-empty-tests
+cargo run --release --bin dump_points -- --data data/sessions/pydantic__pydantic.jsonl --out points.jsonl
+OPENAI_API_KEY=... python scripts/llm_summary_arm.py points.jsonl --out llm.json
 python scripts/summarize.py results/*.json
 ```
+The `experiments` GitHub Actions workflow runs the replay and the point export from scratch and commits the results.
 
 ## How it works
 
@@ -92,6 +117,7 @@ any harness ── tool calls ──▶  pagefault (Rust, axum)  ── HTTP JSO
    - **Fault** (needed, not restored): create or strengthen `NEXT(focus → needed)`.
    - **Waste** (restored, never used): weaken the `NEXT` edges that pulled it in.
    - **Weights:** fit the repo's feature weights with online logistic regression.
+   - **Fault counter:** count how often each entity was a page fault. It's a plain per-repo counter and one more feature; the benchmark reports it alone as the no-graph ablation.
 
    Edges and their learned weights are written back to HydraDB in batches. The 15 per-repo feature weights live in the service process for now.
 
@@ -160,7 +186,10 @@ docs/LAUNCH.md             go-to-market
 ## Limits and next steps
 
 - **The benchmark measures re-fetches, not task success.** A live A/B with pi on local models is next.
-- **Ground truth is what the recorded agent fetched again.** That's a proxy for need, not an oracle.
+- **Ground truth is what the recorded agent fetched again.** That's a proxy for need, not an oracle. All trajectories come from one family of agent models (SWE-agent with Llama).
+- **A file counts as one item.** Restoring lines 1–100 counts as a hit even if the agent reopens it at line 600.
+- **The graph's edge over a plain learned counter is modest** (2–18%, negative on one unfiltered repo). Learning from page faults does most of the work.
+- **The live service relabels its own wins.** Learning in `end()` treats only re-fetches as needed, so a restore that prevented a re-fetch can be scored as waste. The benchmark replays are unaffected.
 - **Next:**
   - an MCP server, so Claude Code and Codex get `recall` and `compact` with no plugin
   - a shared team graph across developers and harnesses

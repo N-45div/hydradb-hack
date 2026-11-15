@@ -1,0 +1,44 @@
+{
+  "model": "gpt-5.4-mini",
+  "reasoning_effort": "low",
+  "budget_tokens": 2000,
+  "scoring": "summary credited when it mentions the needed file/search/command (generous); pagefault only when a restored step shows it",
+  "arms": {
+    "recency": {
+      "compactions": 253,
+      "needed": 247,
+      "recall": 0.5951417004048583,
+      "faults_per_compaction": 0.3952569169960474,
+      "rework_tokens_per_compaction": 190.0909090909091
+    },
+    "summary": {
+      "compactions": 253,
+      "needed": 247,
+      "recall": 0.6680161943319838,
+      "faults_per_compaction": 0.3241106719367589,
+      "rework_tokens_per_compaction": 54.03162055335969
+    },
+    "pagefault": {
+      "compactions": 253,
+      "needed": 247,
+      "recall": 0.8421052631578947,
+      "faults_per_compaction": 0.1541501976284585,
+      "rework_tokens_per_compaction": 138.9604743083004
+    },
+    "summary+pf": {
+      "compactions": 253,
+      "needed": 247,
+      "recall": 0.9352226720647774,
+      "faults_per_compaction": 0.06324110671936758,
+      "rework_tokens_per_compaction": 14.193675889328063
+    }
+  },
+  "summary_latency_seconds": {
+    "p50": 5.224078699999154,
+    "p95": 7.311574800000017
+  },
+  "llm_tokens": {
+    "prompt_tokens": 5078762,
+    "completion_tokens": 414647
+  }
+}
