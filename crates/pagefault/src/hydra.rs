@@ -191,8 +191,19 @@ impl GraphStore for HydraStore {
 
     fn clear_space(&mut self, space: u8, _ids: &[u64]) -> anyhow::Result<()> {
         self.degree_cache.clear();
-        self.query(&format!("MATCH (n:S{space}) DETACH DELETE n"), Value::Null)?;
-        self.query(&format!("MATCH (n:M{space}) DETACH DELETE n"), Value::Null)?;
+        // Batched delete (one huge DETACH DELETE fails on a large persisted space):
+        // read the ids, then delete them 1000 at a time.
+        for label in [format!("S{space}"), format!("M{space}")] {
+            let ids: Vec<u64> = self
+                .query(&format!("MATCH (n:{label}) RETURN n.id AS id"), Value::Null)?
+                .iter()
+                .filter_map(|r| r.first().and_then(cell_u64))
+                .collect();
+            for chunk in ids.chunks(BATCH) {
+                let rows: Vec<Value> = chunk.iter().map(|id| json!({"id": id})).collect();
+                self.query("UNWIND $rows AS row MATCH (n {id: row.id}) DETACH DELETE n", json!({ "rows": rows }))?;
+            }
+        }
         Ok(())
     }
 
