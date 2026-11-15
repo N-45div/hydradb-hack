@@ -234,14 +234,18 @@ fn load_demo(a: &Args, cfg: &SimCfg) -> anyhow::Result<Demo> {
             (p, cps)
         })
         .collect();
-    let repo = train.first().map(|p| p.session.repo.clone()).unwrap_or_default();
+    // Tag the demo repo with a per-load nonce: entity ids hash the repo name, so
+    // each (re)load writes fresh vertex ids instead of re-creating ids that the
+    // previous load's graph (persisted on disk) used and that were just deleted.
+    let nonce = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+    let repo = format!("{}#{nonce}", train.first().map(|p| p.session.repo.clone()).unwrap_or_default());
     Demo::new(RepoSplit { repo, train, test }, cfg.clone(), store(a)?, store(a)?)
 }
 
 async fn demo_state(State(s): State<Shared>) -> R {
     let v = blocking(s, |svc| {
         Ok(match &svc.demo {
-            Some(d) => json!({"repo": d.split.repo, "ingested": d.ingested, "train": d.split.train.len(), "test": d.split.test.len(), "curve": d.curve, "stats": d.learned.stats, "weights": d.learned.params.weights, "features": pagefault::policy::FEATURES, "prior": pagefault::policy::PRIOR}),
+            Some(d) => json!({"repo": d.split.repo.split('#').next().unwrap_or(""), "ingested": d.ingested, "train": d.split.train.len(), "test": d.split.test.len(), "curve": d.curve, "stats": d.learned.stats, "weights": d.learned.params.weights, "features": pagefault::policy::FEATURES, "prior": pagefault::policy::PRIOR}),
             None => match DEMO_FAILED.lock().ok().and_then(|f| f.clone()) {
                 Some(e) => json!({"error": format!("live demo failed to load: {e}")}),
                 None => json!({"loading": true, "error": "Loading the live HydraDB demo graph… (about a minute after a cold start)"}),

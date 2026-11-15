@@ -62,5 +62,13 @@ show("meta vertex write", q("UNWIND $rows AS row MERGE (n {id: row.id}) SET n:M9
 show("meta vertex read", q("MATCH (m:M9) RETURN m.id AS id, m.repo AS repo, m.weights AS weights"))
 show("faults update", q(f"UNWIND $rows AS row MERGE (n {{id: row.id}}) SET n:S{S}, n.faults = row.faults", {"rows": [{"id": 900002, "faults": 5.0}]}))
 show("faults read", q(f"MATCH (n:S{S}) WHERE n.faults > 3.0 RETURN n.id AS id, n.faults AS f, n.kind AS kind"))
+# Delete-then-recreate: batched DETACH DELETE of ids, then upsert the same ids again.
+ids = [{"id": i} for i, _, _ in ents]
+show("batched delete by id", q("UNWIND $rows AS row MATCH (n {id: row.id}) DETACH DELETE n", {"rows": ids}))
+show("count after delete", q(f"MATCH (n:S{S}) RETURN count(*) AS c"))
+show("re-upsert same ids", q(f"UNWIND $rows AS row MERGE (n {{id: row.id}}) SET n:S{S}, n.kind = row.kind, n.key = row.key, n.lbl = row.lbl, n.repo = row.repo, n.faults = row.faults", {"rows": rows}))
+show("count after re-upsert", q(f"MATCH (n:S{S}) RETURN count(*) AS c"))
+show("re-create edge on recreated ids", q(f"UNWIND $rows AS row MATCH (a:S{S} {{id: row.src}}), (b:S{S} {{id: row.dst}}) MERGE (a)-[r:CO {{id: row.eid}}]->(b) SET r.w = row.w, r.n = row.n", {"rows": [{"src": 900001, "dst": 900002, "eid": 77, "w": 0.5, "n": 1}]}))
+show("re-upsert again (second time)", q(f"UNWIND $rows AS row MERGE (n {{id: row.id}}) SET n:S{S}, n.kind = row.kind, n.key = row.key, n.lbl = row.lbl, n.repo = row.repo, n.faults = row.faults", {"rows": rows}))
 show("clear", q(f"MATCH (n:S{S}) DETACH DELETE n"))
 show("clear meta", q("MATCH (n:M9) DETACH DELETE n"))
