@@ -143,6 +143,8 @@ Set `PAGEFAULT_API_KEY` to require a bearer token on session endpoints.
 
 ## pi extension
 
+A real run with pi, `gpt-5.4-mini` and the deployed API is in [docs/pi-live-run.md](docs/pi-live-run.md). It covers two compactions, what was restored and why, and the NEXT and FIXED_BY edges the graph learned from that one session.
+
 `integrations/pi/` replaces pi's summary compaction (via `session_before_compact`), streams tool results, adds a `recall` tool and warns before repeating a failed command. It works with any model pi can run, including local ones. See [integrations/pi/README.md](integrations/pi/README.md).
 
 ## Run it
