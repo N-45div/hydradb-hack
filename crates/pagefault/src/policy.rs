@@ -7,7 +7,7 @@
 //! * `oracle`   – knows the future; upper bound for the chart
 
 use crate::extract::{Ent, Kind, StepInfo};
-use crate::graph::{entity_id, EdgeKind, GraphStore};
+use crate::graph::{entity_id, selector, EdgeKind, GraphStore};
 use crate::sim::CompactionPoint;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
@@ -313,13 +313,21 @@ pub fn graph_score(ctx: &Ctx, store: &mut dyn GraphStore, space: u8, p: &GraphPa
     }
 
     if p.use_repo {
-        // Repo graph in HydraDB, one hop from focus, weighted by learned edges.
-        let src_ids: Vec<u64> = focus.iter().map(|(k, _, _)| *k).collect();
-        let edges = store.neighbors(&src_ids)?;
+        // Repo graph in HydraDB. Two native path calls, no client-side traversal:
+        //   1. one hop from every focus entity to every candidate, over all four
+        //      relationship types (CO, MENTIONS, NEXT, FIXED_BY);
+        //   2. two hops over the semantic edges only (MENTIONS, NEXT, FIXED_BY),
+        //      e.g. command -MENTIONS-> error -FIXED_BY-> file.
+        // HydraDB answers each with one `algo.MSpaths` over GraphBLAS topology.
+        let src: Vec<(u64, String)> = focus.iter().map(|(k, e, _)| (*k, selector(ctx.repo, e))).collect();
+        let mut tgt: Vec<(u64, String)> = s.cand.iter().map(|(k, e)| (*k, selector(ctx.repo, e))).collect();
+        tgt.sort();
         let mut acc: HashMap<(u64, usize), f64> = HashMap::new();
-        let mut mid: HashMap<u64, f64> = HashMap::new();
-        for e in &edges {
-            let Some((fe, w)) = focus_ids.get(&e.src) else { continue };
+        let mut one = store.paths(&src, &tgt, &EdgeKind::ALL, 1, 8)?;
+        one.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));
+        for path in &one {
+            let (Some(e), Some((fe, w))) = (path.edges.first(), focus_ids.get(&path.nodes[0].0)) else { continue };
+            let Some(ce) = s.cand.get(&e.dst).cloned() else { continue };
             let v = w * edge_strength(e.kind, e.w, e.n);
             let slot = match e.kind {
                 EdgeKind::Co => 3,
@@ -327,42 +335,34 @@ pub fn graph_score(ctx: &Ctx, store: &mut dyn GraphStore, space: u8, p: &GraphPa
                 EdgeKind::Next => 5,
                 EdgeKind::FixedBy => 6,
             };
-            if let Some(ce) = s.cand.get(&e.dst) {
-                *acc.entry((e.dst, slot)).or_insert(0.0) += v;
-                s.contrib.entry(e.dst).or_default().push((e.src, e.dst, e.kind));
-                note(&mut s.why, e.dst, v * 1.5, || format!("{} -{}-> {}", fe.label(), e.kind.rel_type(), ce.label()));
-            }
-            if !focus_ids.contains_key(&e.dst) {
-                *mid.entry(e.dst).or_insert(0.0) += v;
-            }
+            *acc.entry((e.dst, slot)).or_insert(0.0) += v;
+            s.contrib.entry(e.dst).or_default().push((e.src, e.dst, e.kind));
+            note(&mut s.why, e.dst, v * 1.5, || format!("{} -{}-> {}", fe.label(), e.kind.rel_type(), ce.label()));
         }
-        // Two hops through the strongest intermediate entities.
-        let mut mids: Vec<(u64, f64)> = mid.into_iter().collect();
-        mids.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap().then(a.0.cmp(&b.0)));
-        mids.truncate(8);
-        let mid_w: HashMap<u64, f64> = mids.iter().cloned().collect();
-        // Degree of each candidate in the repo graph (how central it is across sessions).
-        let mut ids: Vec<u64> = mids.iter().map(|m| m.0).collect();
-        ids.extend(s.cand.keys().copied().filter(|k| !mid_w.contains_key(k)));
-        let mut deg: HashMap<u64, usize> = HashMap::new();
-        for e in store.neighbors(&ids)? {
-            if e.kind == EdgeKind::Co {
-                *deg.entry(e.src).or_insert(0) += 1;
-            }
-            if let Some(mw) = mid_w.get(&e.src) {
-                if s.cand.contains_key(&e.dst) {
-                    *acc.entry((e.dst, 7)).or_insert(0.0) += mw * edge_strength(e.kind, e.w, e.n);
-                }
-            }
+        let mut two = store.paths(&src, &tgt, &[EdgeKind::Mentions, EdgeKind::Next, EdgeKind::FixedBy], 2, 32)?;
+        two.retain(|p| p.edges.len() == 2);
+        two.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));
+        for path in &two {
+            let Some((fe, w)) = focus_ids.get(&path.nodes[0].0) else { continue };
+            let dst = path.nodes[2].0;
+            let Some(ce) = s.cand.get(&dst).cloned() else { continue };
+            let v = w * path.edges.iter().map(|e| edge_strength(e.kind, e.w, e.n)).product::<f64>();
+            *acc.entry((dst, 7)).or_insert(0.0) += v;
+            let mid = path.nodes[1].1.clone().unwrap_or_else(|| "…".into());
+            note(&mut s.why, dst, v, || {
+                format!("{} -{}-> {} -{}-> {}", fe.label(), path.edges[0].kind.rel_type(), mid, path.edges[1].kind.rel_type(), ce.label())
+            });
         }
         for ((eid, slot), x) in acc {
             if let Some(v) = f.get_mut(&eid) {
                 v[slot] = x.tanh();
             }
         }
-        for (eid, d) in deg {
-            if let Some(v) = f.get_mut(&eid) {
-                v[11] = (1.0 + d as f64).ln() / 50f64.ln();
+        // How central each candidate is across past sessions: HydraDB `algo.degree`.
+        let deg = store.degrees(space, EdgeKind::Co)?;
+        for (eid, v) in f.iter_mut() {
+            if let Some(d) = deg.get(eid) {
+                v[11] = (1.0 + *d as f64).ln() / 50f64.ln();
             }
         }
     }

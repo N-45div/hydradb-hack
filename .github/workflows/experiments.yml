@@ -9,6 +9,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  packages: read
 concurrency: experiments
 jobs:
   run:
@@ -37,6 +38,22 @@ jobs:
           ./target/release/dump_points --data data/sessions/pydantic__pydantic.jsonl --out results/points_pydantic.jsonl
           gzip -9 -f results/points_pydantic.jsonl
           ls -la results results/unfiltered
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Start HydraDB (open-source engine, from the published image)
+        run: |
+          mkdir -p hdata && chmod 777 hdata
+          docker run -d --name hydra -p 8443:8443 -p 9090:9090 -v $PWD/hdata:/data -e HYDRADB_TOKEN=ci-token-0123456789abcdef0123456789 ghcr.io/n-45div/hydradb-hack:latest
+          for i in $(seq 1 90); do curl -sf http://127.0.0.1:9090/readyz && break; sleep 2; done
+      - name: Benchmark on HydraDB (MSpaths traversal, algo.degree)
+        env:
+          HYDRADB_URL: http://127.0.0.1:8443
+          HYDRADB_TOKEN: ci-token-0123456789abcdef0123456789
+        run: |
+          time ./target/release/replay --repos pydantic__pydantic --store hydra --seeds 1 --out results/pydantic_hydradb.json
       - name: Summarize
         run: python scripts/summarize.py results/*.json results/unfiltered/*.json | tee results/SUMMARY.txt
       - name: Commit results

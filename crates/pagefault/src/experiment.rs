@@ -217,6 +217,8 @@ pub fn learning_curve(
     stat_space: u8,
     learned_store: &mut dyn GraphStore,
     learned_space: u8,
+    gkv_store: &mut dyn GraphStore,
+    gkv_space: u8,
     mut on_point: impl FnMut(usize, &BTreeMap<String, Outcome>),
 ) -> anyhow::Result<(BTreeMap<String, Vec<Point>>, Learner)> {
     let order = order_for_seed(split.train.len(), seed);
@@ -228,8 +230,7 @@ pub fn learning_curve(
     let mut weights_only = Learner::with_params(100, &split.repo, no_repo.clone(), false);
     let mut kv = Learner::with_params(101, &split.repo, GraphParams { use_session: false, ..no_repo }, true);
     let (mut wo_store, mut kv_store) = (crate::graph::MemStore::default(), crate::graph::MemStore::default());
-    let mut graph_kv = Learner::with_params(102, &split.repo, GraphParams::default(), true);
-    let mut gkv_store = crate::graph::MemStore::default();
+    let mut graph_kv = Learner::with_params(gkv_space, &split.repo, GraphParams::default(), true);
     let mut curves: BTreeMap<String, Vec<Point>> = BTreeMap::new();
     let mut ingested = 0usize;
     // Arms that do not depend on training are evaluated once.
@@ -242,13 +243,13 @@ pub fn learning_curve(
             learned.ingest(&p.infos, p.session.resolved, cfg, learned_store)?;
             weights_only.ingest(&p.infos, p.session.resolved, cfg, &mut wo_store)?;
             kv.ingest(&p.infos, p.session.resolved, cfg, &mut kv_store)?;
-            graph_kv.ingest(&p.infos, p.session.resolved, cfg, &mut gkv_store)?;
+            graph_kv.ingest(&p.infos, p.session.resolved, cfg, &mut *gkv_store)?;
             ingested += 1;
         }
         let mut extra = BTreeMap::new();
         extra.insert("weights_only".to_string(), (weights_only.params.clone(), 100u8));
         extra.insert("kv_learned".to_string(), (kv.params.clone(), 101u8));
-        let mut stores = ArmStores { stat: (stat_store, stat_space), learned: (learned_store, learned_space), learned_params: learned.params.clone(), extra, graph_kv: Some((&mut gkv_store, 102u8, graph_kv.params.clone())) };
+        let mut stores = ArmStores { stat: (stat_store, stat_space), learned: (learned_store, learned_space), learned_params: learned.params.clone(), extra, graph_kv: Some((&mut *gkv_store, gkv_space, graph_kv.params.clone())) };
         let mut res = evaluate(split, cfg, &["graph_static", "graph_learned", "weights_only", "kv_learned", "graph_kv_learned"], &mut stores)?;
         if fixed.is_none() {
             fixed = Some(evaluate(split, cfg, &["recency", "bm25", "graph_session", "oracle"], &mut stores)?);

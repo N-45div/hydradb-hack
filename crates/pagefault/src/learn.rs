@@ -30,6 +30,8 @@ pub struct Learner {
     /// Keep a plain per-entity page-fault counter in `params.kv` (ablation).
     pub kv: bool,
     pub need_count: HashMap<u64, f64>,
+    /// Fault counts changed since the last `take_dirty_faults` (to persist).
+    pub dirty_faults: HashSet<u64>,
 }
 
 #[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
@@ -58,7 +60,37 @@ impl Learner {
             stats: LearnStats::default(),
             kv: false,
             need_count: HashMap::new(),
+            dirty_faults: HashSet::new(),
         }
+    }
+
+    /// Rebuild a learner from what the store persisted: entities, edges, fault
+    /// counts and feature weights. A restarted service resumes learning here
+    /// instead of starting from zero (and overwriting HydraDB's edge weights).
+    pub fn from_state(space: u8, repo: &str, ents: &[(u64, Ent, f64)], edges: &[Edge], weights: Option<&[f64]>) -> Self {
+        let mut l = Learner::with_params(space, repo, GraphParams::default(), true);
+        for (id, e, faults) in ents {
+            l.mirror.add_entity(*id, e);
+            if *faults > 0.0 {
+                l.need_count.insert(*id, *faults);
+            }
+        }
+        for e in edges {
+            l.mirror.upsert(e.clone());
+        }
+        if let Some(w) = weights {
+            if w.len() == NF {
+                l.params.weights = w.to_vec();
+            }
+        }
+        l.params.kv = Some(l.need_count.clone());
+        l
+    }
+
+    /// Fault counts changed since the last call, as (entity id, count).
+    pub fn take_dirty_faults(&mut self) -> Vec<(u64, f64)> {
+        let ids: Vec<u64> = self.dirty_faults.drain().collect();
+        ids.into_iter().map(|id| (id, self.need_count.get(&id).copied().unwrap_or(0.0))).collect()
     }
 
     /// A learner for an ablation arm: same online learning, different features.
@@ -86,7 +118,7 @@ impl Learner {
 
     fn flush(&self, store: &mut dyn GraphStore, new_ents: Vec<(u64, Ent)>, dirty: HashSet<(u64, u64, EdgeKind)>) -> anyhow::Result<()> {
         if !new_ents.is_empty() {
-            store.write_entities(&new_ents)?;
+            store.write_entities(&self.repo, &new_ents)?;
         }
         let mut edges: Vec<Edge> = dirty.into_iter().filter_map(|k| self.mirror.edges.get(&k).cloned()).collect();
         edges.sort_by_key(|e| (e.src, e.dst, e.kind));
@@ -112,7 +144,9 @@ impl Learner {
         if self.kv {
             for cp in &cps {
                 for n in &cp.needed {
-                    *self.need_count.entry(self.id(&n.ent)).or_insert(0.0) += 1.0;
+                    let id = self.id(&n.ent);
+                    *self.need_count.entry(id).or_insert(0.0) += 1.0;
+                    self.dirty_faults.insert(id);
                 }
             }
             self.params.kv = Some(self.need_count.clone());

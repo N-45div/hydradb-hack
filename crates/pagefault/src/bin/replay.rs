@@ -71,11 +71,14 @@ fn main() -> anyhow::Result<()> {
         for seed in 0..a.seeds {
             let mut s1 = make_store(&a)?;
             let mut s2 = make_store(&a)?;
+            let mut s3 = make_store(&a)?;
             let (sp1, sp2) = ((2 * seed + 1) as u8, (2 * seed + 2) as u8);
             s1.clear_space(sp1, &[])?;
             s2.clear_space(sp2, &[])?;
+            let sp3 = (64 + seed) as u8;
+            s3.clear_space(sp3, &[])?;
             let t0 = std::time::Instant::now();
-            let (curves, learner) = learning_curve(&sp, &cfg, &a.checkpoints, seed, s1.as_mut(), sp1, s2.as_mut(), sp2, |n, res| {
+            let (curves, learner) = learning_curve(&sp, &cfg, &a.checkpoints, seed, s1.as_mut(), sp1, s2.as_mut(), sp2, s3.as_mut(), sp3, |n, res| {
                 let row: Vec<String> = ARMS.iter().filter_map(|arm| res.get(*arm).map(|o| format!("{arm}={:.3}/{:.2}", o.recall(), o.faults_per_compaction()))).collect();
                 eprintln!("  seed {seed} sessions {n:>4}: {}", row.join("  "));
             })?;

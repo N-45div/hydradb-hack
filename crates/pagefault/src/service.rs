@@ -153,7 +153,37 @@ fn clip(s: &str, max_chars: usize) -> String {
 
 impl Service {
     pub fn new(store: Box<dyn GraphStore>, cfg: SimCfg) -> Self {
-        Service { store, space: 0, cfg, learners: HashMap::new(), sessions: HashMap::new(), demo: None, next_id: 1 }
+        let mut svc = Service { store, space: 0, cfg, learners: HashMap::new(), sessions: HashMap::new(), demo: None, next_id: 1 };
+        match svc.load_from_store() {
+            Ok(n) => eprintln!("resumed {n} repo graphs from {}", svc.store.name()),
+            Err(e) => eprintln!("could not resume state from {}: {e}", svc.store.name()),
+        }
+        svc
+    }
+
+    /// HydraDB is the source of truth: rebuild every repo's learner (entities,
+    /// edges, fault counts, feature weights) from what it stores.
+    pub fn load_from_store(&mut self) -> anyhow::Result<usize> {
+        let Some(st) = self.store.load_space(self.space)? else { return Ok(0) };
+        let mut by_repo: HashMap<String, Vec<(u64, Ent, f64)>> = HashMap::new();
+        let mut repo_of: HashMap<u64, String> = HashMap::new();
+        for (id, e, repo, f) in st.ents {
+            repo_of.insert(id, repo.clone());
+            by_repo.entry(repo).or_default().push((id, e, f));
+        }
+        let mut edges_by: HashMap<String, Vec<crate::graph::Edge>> = HashMap::new();
+        for e in st.edges {
+            if let Some(r) = repo_of.get(&e.src) {
+                edges_by.entry(r.clone()).or_default().push(e);
+            }
+        }
+        let weights: HashMap<String, Vec<f64>> = st.weights.into_iter().collect();
+        for (repo, ents) in by_repo {
+            let edges = edges_by.get(&repo).map(|v| v.as_slice()).unwrap_or(&[]);
+            let l = Learner::from_state(self.space, &repo, &ents, edges, weights.get(&repo).map(|w| w.as_slice()));
+            self.learners.insert(repo, l);
+        }
+        Ok(self.learners.len())
     }
 
     fn learner(&mut self, repo: &str) -> &mut Learner {
@@ -313,7 +343,7 @@ impl Service {
             }
             learner.stats.faults_seen += 1;
             let ents: Vec<(u64, Ent)> = focus.iter().chain(&targets).map(|e| (entity_id(space, &repo, e), e.clone())).collect();
-            self.store.write_entities(&ents)?;
+            self.store.write_entities(&repo, &ents)?;
             self.store.write_edges(&edges)?;
         }
         Ok(items)
@@ -350,9 +380,14 @@ impl Service {
         let s = self.sessions.remove(id).ok_or_else(|| anyhow::anyhow!("unknown session {id}"))?;
         let cfg = self.cfg.clone();
         let space = self.space;
-        let learner = self.learners.entry(s.repo.clone()).or_insert_with(|| Learner::with_params(space, &s.repo, crate::policy::GraphParams::default(), true));
-        learner.ingest(&s.infos, resolved, &cfg, self.store.as_mut())?;
-        Ok(learner.stats.clone())
+        let (stats, weights, faults) = {
+            let learner = self.learners.entry(s.repo.clone()).or_insert_with(|| Learner::with_params(space, &s.repo, crate::policy::GraphParams::default(), true));
+            learner.ingest(&s.infos, resolved, &cfg, self.store.as_mut())?;
+            (learner.stats.clone(), learner.params.weights.clone(), learner.take_dirty_faults())
+        };
+        // Persist what was learned so a restart resumes from HydraDB.
+        self.store.save_learner(space, &s.repo, &weights, &faults)?;
+        Ok(stats)
     }
 
     pub fn memory(&mut self, repo: &str) -> MemoryView {
