@@ -41,7 +41,7 @@ Honest gap: our baselines replay truncation, keyword search and the graph. We ha
 We replay real SWE-agent runs ([nebius/SWE-agent-trajectories](https://huggingface.co/datasets/nebius/SWE-agent-trajectories), CC-BY-4.0) with an 8k-token context limit, the regime local models live in.
 - At every compaction, each policy keeps the same 2k-token budget of evicted history.
 - A **page fault** is the agent, in the next 20 steps, re-opening a file, repeating a search, or re-running an *unchanged* command that an evicted step had already shown. Re-running after an edit is not counted.
-- **Held out:** test sessions are different GitHub issues from anything the graph learned from.
+- **Held out:** test sessions are different GitHub issues from anything the graph learned from. The test set keeps only sessions with at least one re-fetch after a compaction, so the rates are *per compaction in sessions where compaction cost something*. Sessions where nothing was ever re-fetched would lower every arm's fault rate equally.
 - **Not a one-off:** 5 different training orders; ± is the std.
 
 Page faults per compaction (lower is better), before learning → after the graph has ingested the repo's training sessions:
@@ -62,7 +62,7 @@ What the baselines show:
 - **Learning matters.** Accumulating graph structure alone barely moves (0.360 → 0.344). Learning from page faults halves them on pydantic. On sqlglot the graph without learning *loses* to truncation; learning flips it.
 - **It's real continual learning.** The curve rises with the number of sessions learned, on held-out issues, across 5 training orders. See the live chart at `/`.
 
-The pydantic run was repeated with HydraDB as the store (`results/pydantic_hydradb.json`) and reproduces the in-memory run exactly.
+The pydantic run was repeated with HydraDB as the store (`results/pydantic_hydradb.json`) and tracks the in-memory run closely (seed 0: recall 0.632 → 0.842 on both; at the 800-session checkpoint 0.838 vs 0.834).
 
 Reproduce:
 ```bash
@@ -93,7 +93,7 @@ any harness ── tool calls ──▶  pagefault (Rust, axum)  ── HTTP JSO
    - **Waste** (restored, never used): weaken the `NEXT` edges that pulled it in.
    - **Weights:** fit the repo's feature weights with online logistic regression.
 
-   Weights and edges are written back to HydraDB in batches.
+   Edges and their learned weights are written back to HydraDB in batches. The 15 per-repo feature weights live in the service process for now.
 
 HydraDB specifics we built around:
 - Node ids are non-negative integers, so we hash entities to 56 bits plus a 7-bit space for tenants and experiment arms.
