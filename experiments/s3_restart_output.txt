@@ -1,0 +1,143 @@
++ curl -sSL -o rustfs.zip https://github.com/rustfs/rustfs/releases/download/1.0.4/rustfs-linux-x86_64-musl-v1.0.4.zip
++ unzip -o -q rustfs.zip -d rustfs
++ ls -la rustfs
+total 269776
+drwxr-xr-x  2 runner runner      4096 Nov 15 10:57 .
+drwxr-xr-x 15 runner runner      4096 Nov 15 10:57 ..
+-rwxr-xr-x  1 runner runner 276241344 Oct 25 14:15 rustfs
+++ find rustfs -type f -name 'rustfs*' -perm -u+x
+++ head -1
++ RB=rustfs/rustfs
++ echo 'binary: rustfs/rustfs'
+binary: rustfs/rustfs
++ head -60
++ rustfs/rustfs --help
+Main CLI parser
+
+Usage: rustfs [COMMAND]
+
+Commands:
+  server    Start the object storage server (default when no subcommand is given)
+  info      Display system information
+  tls       Inspect TLS certificate directory layout and parsing status
+  diagnose  Analyze RustFS log files and report probable failure causes
+  inspect   Offline, read-only inspection of on-disk data (no server required)
+  connect   Configure outbound RustFS Connect integration
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
++ mkdir -p s3data
++ RUSTFS_ACCESS_KEY=pagefaultadmin
++ RUSTFS_SECRET_KEY=pagefault-secret-0123456789
++ RUSTFS_ADDRESS=127.0.0.1:9000
++ RUSTFS_CONSOLE_ENABLE=false
++ RUSTFS_VOLUMES=/home/runner/work/hydradb-hack/hydradb-hack/s3data
++ nohup rustfs/rustfs /home/runner/work/hydradb-hack/hydradb-hack/s3data
+++ seq 1 30
++ for i in $(seq 1 30)
++ curl -s -o /dev/null http://127.0.0.1:9000/
++ sleep 1
++ for i in $(seq 1 30)
++ curl -s -o /dev/null http://127.0.0.1:9000/
++ break
++ tail -5 rustfs.log
++ curl -s -w ' make-bucket HTTP %{http_code}\n' -X PUT --aws-sigv4 aws:amz:us-east-1:s3 --user pagefaultadmin:pagefault-secret-0123456789 http://127.0.0.1:9000/hydradb
+ make-bucket HTTP 200
++ run_node
++ docker run -d --name pf --network host -e CLOUD_PROVIDER=aws -e AWS_BUCKET_NAME=hydradb -e AWS_DEFAULT_REGION=us-east-1 -e AWS_ENDPOINT=http://127.0.0.1:9000 -e AWS_ALLOW_HTTP=true -e AWS_ACCESS_KEY_ID=pagefaultadmin -e AWS_SECRET_ACCESS_KEY=pagefault-secret-0123456789 -e HYDRADB_TOKEN=ci-token-0123456789abcdef0123456789 -e PORT=8080 ghcr.io/n-45div/hydradb-hack:latest
+Unable to find image 'ghcr.io/n-45div/hydradb-hack:latest' locally
+latest: Pulling from n-45div/hydradb-hack
+26538842dfbf: Pulling fs layer
+8c356fffdb0c: Pulling fs layer
+bfc246b0ebca: Pulling fs layer
+4269c1fda3c2: Pulling fs layer
+e8e3cdcc9323: Pulling fs layer
+de85ef663020: Pulling fs layer
+d6582ce8fef7: Pulling fs layer
+9fde93fad7f8: Pulling fs layer
+a287ae601dcc: Pulling fs layer
+43924281cf6a: Pulling fs layer
+18198a82f098: Pulling fs layer
+4269c1fda3c2: Waiting
+e8e3cdcc9323: Waiting
+de85ef663020: Waiting
+d6582ce8fef7: Waiting
+9fde93fad7f8: Waiting
+43924281cf6a: Waiting
+18198a82f098: Waiting
+26538842dfbf: Verifying Checksum
+26538842dfbf: Download complete
+bfc246b0ebca: Verifying Checksum
+bfc246b0ebca: Download complete
+4269c1fda3c2: Verifying Checksum
+4269c1fda3c2: Download complete
+de85ef663020: Verifying Checksum
+de85ef663020: Download complete
+e8e3cdcc9323: Verifying Checksum
+e8e3cdcc9323: Download complete
+26538842dfbf: Pull complete
+d6582ce8fef7: Verifying Checksum
+d6582ce8fef7: Download complete
+9fde93fad7f8: Verifying Checksum
+9fde93fad7f8: Download complete
+43924281cf6a: Verifying Checksum
+43924281cf6a: Download complete
+a287ae601dcc: Download complete
+18198a82f098: Download complete
+8c356fffdb0c: Verifying Checksum
+8c356fffdb0c: Download complete
+8c356fffdb0c: Pull complete
+bfc246b0ebca: Pull complete
+4269c1fda3c2: Pull complete
+e8e3cdcc9323: Pull complete
+de85ef663020: Pull complete
+d6582ce8fef7: Pull complete
+9fde93fad7f8: Pull complete
+a287ae601dcc: Pull complete
+43924281cf6a: Pull complete
+18198a82f098: Pull complete
+Digest: sha256:20f3a00b6b04c4aa7046c1e3bfa2c4e4da67e2150a1be7013495174753483819
+Status: Downloaded newer image for ghcr.io/n-45div/hydradb-hack:latest
+961c434b882790d421289ca89b481d508b589b4715b5f24ba20d36e3f4a463c9
+++ seq 1 90
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ break
++ docker logs pf
++ tail -8
++ grep -E '"level":"(WARN|ERROR)"|writers allowed|HydraDB ready|resumed'
+HydraDB ready
+resumed 0 repo graphs from hydradb(http://127.0.0.1:8443)
++ python3 scripts/restart_test.py before http://127.0.0.1:8443 ci-token-0123456789abcdef0123456789
+before upsert: {"query_id": "http-query-220", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:1"}
+before edge: {"query_id": "http-query-232", "columns": [], "rows": [], "read_epoch": null, "next_cursor": null, "bookmark": "sgk:1:64656661756c74:64656661756c74:63656c6c2d30:2"}
+before count: [[{'type': 'integer', 'value': 5}]]
++ docker rm -f pf
+pf
++ sleep 2
++ run_node
++ docker run -d --name pf --network host -e CLOUD_PROVIDER=aws -e AWS_BUCKET_NAME=hydradb -e AWS_DEFAULT_REGION=us-east-1 -e AWS_ENDPOINT=http://127.0.0.1:9000 -e AWS_ALLOW_HTTP=true -e AWS_ACCESS_KEY_ID=pagefaultadmin -e AWS_SECRET_ACCESS_KEY=pagefault-secret-0123456789 -e HYDRADB_TOKEN=ci-token-0123456789abcdef0123456789 -e PORT=8080 ghcr.io/n-45div/hydradb-hack:latest
+f3e61bbe3c03d40d6008d096505c7e5d7a610b0a58b40aaf6dd6b7ca75632d7d
+++ seq 1 90
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ sleep 2
++ for i in $(seq 1 90)
++ curl -sf http://127.0.0.1:9090/readyz
++ break
++ docker logs pf
++ tail -8
++ grep -E '"level":"(WARN|ERROR)"|writers allowed|HydraDB ready|resumed'
+HydraDB ready
+resumed 0 repo graphs from hydradb(http://127.0.0.1:8443)
++ python3 scripts/restart_test.py after http://127.0.0.1:8443 ci-token-0123456789abcdef0123456789
+after upsert: {"http_error": 421, "body": "{\"error\":{\"code\":\"not_cell_writer\",\"message\":\"cell cell-0 is not owned by this node; owner: node-0\",\"owner\":\"node-0\"}}"}
+after edge: {"http_error": 421, "body": "{\"error\":{\"code\":\"not_cell_writer\",\"message\":\"cell cell-0 is not owned by this node; owner: node-0\",\"owner\":\"node-0\"}}"}
+after count: [[{'type': 'integer', 'value': 5}]]
++ docker logs pf
++ grep -E '"level":"(WARN|ERROR)"'
++ tail -5
