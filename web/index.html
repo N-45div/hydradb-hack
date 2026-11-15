@@ -180,7 +180,7 @@ function drawLLM() {
   if (!LLM) return;
   const a = LLM.data.arms, d = LLM.data;
   const order = [["recency", "Keep most recent", "--c-recency"], ["summary", "LLM summary", "--c-bm25"],
-    ["pagefault", "pagefault", "--c-learned"], ["summary+pf", "Summary + pagefault", "--c-gkv"]];
+    ["pagefault", "pagefault", "--c-learned"], ["summary+pf", "Both", "--c-gkv"]];
   llmChart?.destroy();
   llmChart = new Chart(document.getElementById("llm"), {
     type: "bar",
