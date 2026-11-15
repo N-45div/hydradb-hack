@@ -12,6 +12,30 @@ pagefault treats the context window as a cache:
 
 > Track 2 (agent context layer), HydraDB Hackathon. Extraction, retrieval and learning run in deterministic Rust, with **zero LLM calls**.
 
+## Why not just summarize?
+
+Today's compaction rewrites the window once and hopes the rewrite holds what the next steps need:
+
+| | How it compacts | What it gives up |
+|---|---|---|
+| **OpenCode** ([`compaction.ts`](https://github.com/sst/opencode/blob/d432a06b9c07bab0be4e8d642173b1cb14137f11/packages/core/src/session/compaction.ts)) | An LLM fills a fixed template (Objective, Decisions, Work State, Relevant Files…). The newest 15k tokens are kept verbatim, and the summary is precomputed in the background because writing one "takes 30–60 s". | Its own prompt says it is "fine to leave out information the next agent can recover from the code or the files listed". It plans for the agent to fetch things again. |
+| **OpenAI Responses** ([`/responses/compact`](https://developers.openai.com/api/reference/resources/responses/methods/compact), or `context_management.compact_threshold`) | The server replaces history with an encrypted compaction item, "opaque and not intended to be human-interpretable". | You can't see what was kept, it only works with OpenAI models, and there's no way to ask for a dropped detail back. |
+| **pi default** | An LLM summary plus the newest 20k tokens. | Same as OpenCode. |
+
+All three are one-shot: nothing brings a dropped detail back when the agent needs it ten steps later, nothing learns which details a repo's agents keep needing, and nothing measures what was lost. Every re-opened file and re-run command is a cost these designs accept without counting it. **We count it (page faults), and we cut it.**
+
+pagefault complements a summary rather than replacing it:
+- **The summary** keeps *intent*: the objective, decisions and next move.
+- **pagefault** keeps *evidence*: the exact file view, command output and error that the next step will reach for, chosen by graph traversal.
+
+It's also:
+- **Learned** per repo.
+- **Inspectable:** every kept step comes with its graph path.
+- **Model-agnostic**, local models included.
+- **Fast:** zero LLM calls, about 180 ms median versus OpenCode's 30–60 s summary.
+
+Honest gap: our baselines replay truncation, keyword search and the graph. We haven't yet run an LLM-summary arm (OpenCode's template on the same replays), which needs an LLM key. It's the next experiment.
+
 ## Results
 
 We replay real SWE-agent runs ([nebius/SWE-agent-trajectories](https://huggingface.co/datasets/nebius/SWE-agent-trajectories), CC-BY-4.0) with an 8k-token context limit, the regime local models live in.
