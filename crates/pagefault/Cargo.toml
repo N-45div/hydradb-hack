@@ -3,7 +3,7 @@ name = "pagefault"
 version = "0.1.0"
 edition = "2021"
 description = "Compaction API for coding agents: page context out to a HydraDB graph, page back in what the next step needs, learn from every miss."
-license = "Apache-2.0"
+license = "AGPL-3.0-only"
 
 [dependencies]
 anyhow = "1"

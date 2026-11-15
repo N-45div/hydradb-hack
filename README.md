@@ -219,4 +219,4 @@ web/                       dashboard
   - a shared team graph across developers and harnesses
   - S3-backed HydraDB for hosted multi-tenant memory
 
-Apache-2.0.
+AGPL-3.0. See [LICENSE](LICENSE).
