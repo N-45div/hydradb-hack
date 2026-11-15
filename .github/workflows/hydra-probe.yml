@@ -7,7 +7,7 @@ on:
     paths: ["scripts/hydra_probe.py", ".github/workflows/hydra-probe.yml"]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   packages: read
 jobs:
   probe:
@@ -30,4 +30,14 @@ jobs:
           for i in $(seq 1 90); do curl -sf http://127.0.0.1:9090/readyz && break; sleep 2; done
           docker logs pf 2>&1 | tail -5
       - name: Probe
-        run: python3 scripts/hydra_probe.py http://127.0.0.1:8443 probe-token-0123456789abcdef0123456789
+        run: |
+          mkdir -p experiments
+          python3 scripts/hydra_probe.py http://127.0.0.1:8443 probe-token-0123456789abcdef0123456789 | tee experiments/hydra_probe_output.txt
+      - name: Commit probe output
+        run: |
+          git config user.name "pagefault-experiments"
+          git config user.email "pagefault-experiments@users.noreply.github.com"
+          git add experiments/hydra_probe_output.txt
+          git commit -m "HydraDB probe output" || echo "no changes"
+          git pull --rebase origin main
+          git push origin HEAD:main
