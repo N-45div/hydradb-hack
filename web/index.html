@@ -155,9 +155,11 @@ function stats(curves, i, m) {
   return [mean, sd];
 }
 
+const storeName = s => s === "hydra" ? "HydraDB" : "in-memory mirror";
+
 function kpis() {
   const el = document.getElementById("kpis");
-  const runs = RES.filter(r => r.data.store === "memory" && !r.data.keep_empty_tests).flatMap(r => r.data.repos)
+  const runs = RES.filter(r => !r.data.keep_empty_tests && r.data.seeds > 1).flatMap(r => r.data.repos)
     .filter(r => r.curves.graph_kv_learned);
   if (!runs.length) return;
   const fin = (c, a) => stats(c[a], c[a][0].length - 1, "faults_per_compaction")[0];
@@ -200,7 +202,7 @@ function drawCurve() {
   const m = document.getElementById("metric").value;
   const xs = repo.curves.recency[0].map(p => p.sessions);
   document.getElementById("meta").textContent =
-    `${repo.test_sessions} held-out sessions · ${repo.test_compactions} compactions · ${run.data.seeds} seeds · store: ${run.data.store}`;
+    `${repo.test_sessions} held-out sessions · ${repo.test_compactions} compactions · ${run.data.seeds} training orders · graph store: ${storeName(run.data.store)}`;
   const ds = [];
   for (const [k, label, col] of ARMS) {
     if (!repo.curves[k]) continue;
@@ -239,8 +241,9 @@ async function loadResults() {
   LLM = r.results.find(x => x.data && x.data.arms && x.data.model);
   const sel = document.getElementById("repo");
   sel.innerHTML = RES.flatMap(run => run.data.repos.map(rp =>
-    `<option value="${run.file}|${rp.repo}">${rp.repo.replace("__", "/")} · ${run.data.store}</option>`)).join("");
-  const pick = [...sel.options].find(o => o.value.includes("pydantic") && o.textContent.includes("memory"));
+    `<option value="${run.file}|${rp.repo}">${rp.repo.replace("__", "/")} · ${storeName(run.data.store)}</option>`)).join("");
+  const pick = [...sel.options].find(o => o.value.includes("pydantic") && o.textContent.includes("HydraDB"))
+    || [...sel.options].find(o => o.value.includes("pydantic"));
   if (pick) sel.value = pick.value;
   kpis();
   drawCurve();
