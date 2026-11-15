@@ -1,0 +1,13 @@
+# One-click deploy: https://render.com/deploy?repo=https://github.com/N-45div/hydradb-hack
+# Runs the prebuilt all-in-one image (HydraDB graph-node + pagefault API + dashboard).
+# The image must be public on GHCR, or add registry credentials under `image.creds`.
+services:
+  - type: web
+    name: pagefault
+    runtime: image
+    image:
+      url: ghcr.io/n-45div/hydradb-hack:latest
+    # free = 0.1 CPU / 512 MB, sleeps after 15 min idle, ephemeral disk (the demo
+    # reloads on every start). For judging, switch to 1c-2g so it stays awake and fast.
+    plan: free
+    healthCheckPath: /healthz

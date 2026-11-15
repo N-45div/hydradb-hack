@@ -223,7 +223,11 @@ async function loadResults() {
 }
 
 function drawDemo(d) {
-  if (d.error) { document.getElementById("demoStatus").textContent = d.error; return; }
+  if (d.error) {
+    document.getElementById("demoStatus").textContent = d.error;
+    if (d.loading) setTimeout(() => demo(), 5000);
+    return;
+  }
   document.getElementById("demoStatus").textContent =
     `${d.ingested}/${d.train} training sessions ingested · ${d.test} held-out sessions · faults seen ${d.stats.faults_seen} · NEXT edges ${d.stats.next_created}`;
   const xs = d.curve.map(p => p.graph_learned.sessions);

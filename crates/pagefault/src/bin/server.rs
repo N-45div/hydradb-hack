@@ -41,6 +41,9 @@ struct Args {
 
 type Shared = Arc<(Mutex<Service>, Args)>;
 
+/// Set when the background demo load gives up, so the dashboard can say so.
+static DEMO_FAILED: Mutex<Option<String>> = Mutex::new(None);
+
 struct ApiError(anyhow::Error);
 impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
@@ -204,7 +207,10 @@ async fn demo_state(State(s): State<Shared>) -> R {
     let v = blocking(s, |svc| {
         Ok(match &svc.demo {
             Some(d) => json!({"repo": d.split.repo, "ingested": d.ingested, "train": d.split.train.len(), "test": d.split.test.len(), "curve": d.curve, "stats": d.learned.stats, "weights": d.learned.params.weights, "features": pagefault::policy::FEATURES, "prior": pagefault::policy::PRIOR}),
-            None => json!({"error": "demo not loaded"}),
+            None => match DEMO_FAILED.lock().ok().and_then(|f| f.clone()) {
+                Some(e) => json!({"error": format!("live demo failed to load: {e}")}),
+                None => json!({"loading": true, "error": "Loading the live HydraDB demo graph… (about a minute after a cold start)"}),
+            },
         })
     })
     .await?;
@@ -219,7 +225,7 @@ struct LearnReq {
 async fn demo_learn(State(s): State<Shared>, Json(b): Json<LearnReq>) -> R {
     let n = b.n.unwrap_or(25).min(100);
     blocking(s.clone(), move |svc| {
-        let d = svc.demo.as_mut().ok_or_else(|| anyhow::anyhow!("demo not loaded"))?;
+        let d = svc.demo.as_mut().ok_or_else(|| anyhow::anyhow!("the live demo is still loading, try again in a moment"))?;
         d.learn(n)
     })
     .await?;
@@ -241,17 +247,34 @@ async fn demo_reset(State(s): State<Shared>) -> R {
 async fn main() -> anyhow::Result<()> {
     let a = Args::parse();
     let cfg = SimCfg::default();
-    let mut svc = Service::new(store(&a)?, cfg.clone());
-    let a2 = a.clone();
-    let demo = tokio::task::spawn_blocking(move || load_demo(&a2, &cfg)).await?;
-    match demo {
-        Ok(d) => {
-            eprintln!("demo loaded: {} train / {} test sessions", d.split.train.len(), d.split.test.len());
-            svc.demo = Some(d);
-        }
-        Err(e) => eprintln!("demo not loaded: {e}"),
-    }
+    let svc = Service::new(store(&a)?, cfg.clone());
     let shared: Shared = Arc::new((Mutex::new(svc), a.clone()));
+    // Open the port first and load the live demo in the background. On small
+    // hosts the load takes a while, and platforms such as Render fail a deploy
+    // whose port stays closed. Retries until HydraDB accepts queries.
+    let bg = shared.clone();
+    tokio::task::spawn_blocking(move || {
+        let mut last = String::new();
+        for attempt in 1..=60 {
+            match load_demo(&bg.1, &cfg) {
+                Ok(d) => {
+                    eprintln!("demo loaded: {} train / {} test sessions", d.split.train.len(), d.split.test.len());
+                    if let Ok(mut svc) = bg.0.lock() {
+                        svc.demo = Some(d);
+                    }
+                    return;
+                }
+                Err(e) => {
+                    last = e.to_string();
+                    eprintln!("demo not loaded yet (attempt {attempt}): {last}");
+                    std::thread::sleep(std::time::Duration::from_secs(5));
+                }
+            }
+        }
+        if let Ok(mut f) = DEMO_FAILED.lock() {
+            *f = Some(last);
+        }
+    });
     let app = Router::new()
         .route("/healthz", get(|| async { "ok" }))
         .route("/v1/sessions", post(create_session))

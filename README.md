@@ -102,7 +102,11 @@ Set `PAGEFAULT_API_KEY` to require a bearer token on session endpoints.
 docker build -t pagefault . && docker run -p 8080:8080 -v pagefault-data:/data pagefault
 ```
 
-Every push to `main` also builds and publishes this image to GHCR (`.github/workflows/image.yml`), so a host can deploy `ghcr.io/n-45div/hydradb-hack:latest` without compiling. The image builds the pinned open-source HydraDB engine from source. HydraDB listens only inside the container, and its token is generated at startup and never exposed. It deploys as-is to Railway, Fly or Render: attach a volume at `/data`, and `PORT` is respected.
+Every push to `main` also builds and publishes this image to GHCR (`.github/workflows/image.yml`), so a host can deploy `ghcr.io/n-45div/hydradb-hack:latest` without compiling. The image builds the pinned open-source HydraDB engine from source. HydraDB listens only inside the container, and its token is generated at startup and never exposed.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/N-45div/hydradb-hack)
+
+`render.yaml` deploys the prebuilt image as one web service. The free plan works, but it sleeps after 15 idle minutes and takes about a minute to wake. Its 0.1 CPU makes the live learning demo slow, so use the 1 CPU / 2 GB plan while it's being judged. Any host that runs a Docker image works the same way (Railway, Fly): `PORT` is respected, and a volume at `/data` keeps the graph across restarts.
 
 Local development:
 ```bash
