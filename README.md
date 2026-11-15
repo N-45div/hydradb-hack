@@ -142,8 +142,6 @@ any harness ── tool calls ──▶  pagefault (Rust, axum)  ── HTTP JSO
    - **Configuration:** `CLOUD_PROVIDER=aws`, `AWS_BUCKET_NAME`, `AWS_DEFAULT_REGION` and credentials.
    - **Found along the way:** after a restart on S3, HydraDB's own write idempotency keys (`http-query-N`, a counter that restarts from zero) collide with keys stored by the previous process. pagefault avoids this by sending a globally unique `query_id` with every request.
 
-   The full debugging story is in [docs/LEARNING.md](docs/LEARNING.md).
-
 HydraDB specifics we built around:
 - Node ids are non-negative integers, so we hash entities to 56 bits plus a 7-bit space for tenants and experiment arms.
 - Batched vertex upserts take exactly one label, and batched edge `MERGE … SET` needs single-label endpoints.
@@ -168,7 +166,7 @@ Set `PAGEFAULT_API_KEY` to require a bearer token on session endpoints.
 
 ## pi extension
 
-A real run with pi, `gpt-5.4-mini` and the deployed API is in [docs/pi-live-run.md](docs/pi-live-run.md). It covers two compactions, what was restored and why, and the NEXT and FIXED_BY edges the graph learned from that one session.
+We ran pi for real, with `gpt-5.4-mini` against the deployed API: pi compacted twice through pagefault and fixed the bug, and the graph learned NEXT and FIXED_BY edges from that one session.
 
 `integrations/pi/` replaces pi's summary compaction (via `session_before_compact`), streams tool results, adds a `recall` tool and warns before repeating a failed command. It works with any model pi can run, including local ones. See [integrations/pi/README.md](integrations/pi/README.md).
 
@@ -207,7 +205,6 @@ crates/pagefault/src/
   bin/replay.rs            benchmark CLI
 integrations/pi/           pi extension
 web/                       dashboard
-docs/LAUNCH.md             go-to-market
 ```
 
 ## Limits and next steps

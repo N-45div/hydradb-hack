@@ -5,3 +5,4 @@
 .hydradb/
 node_modules/
 __pycache__/
+docs/
