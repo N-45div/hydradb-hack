@@ -1,0 +1,3107 @@
+{
+  "checkpoints": [
+    0,
+    25,
+    50,
+    100,
+    200,
+    400,
+    800,
+    1500
+  ],
+  "config": {
+    "budget": 2000,
+    "ctx_limit": 8000,
+    "focus_steps": 3,
+    "recent": 2000,
+    "window": 20
+  },
+  "keep_empty_tests": true,
+  "repos": [
+    {
+      "curves": {
+        "bm25": [
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 0,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 25,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 50,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 100,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 200,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 400,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 800,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 1500,
+              "waste_ratio": 0.9752575701996739
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 0,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 25,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 50,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 100,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 200,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 400,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 800,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 1500,
+              "waste_ratio": 0.9752575701996739
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 0,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 25,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 50,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 100,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 200,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 400,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 800,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 1500,
+              "waste_ratio": 0.9752575701996739
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 0,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 25,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 50,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 100,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 200,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 400,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 800,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 1500,
+              "waste_ratio": 0.9752575701996739
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 0,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 25,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 50,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 100,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 200,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 400,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 800,
+              "waste_ratio": 0.9752575701996739
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.14620689655172414,
+              "needed": 180,
+              "recall": 0.4111111111111111,
+              "rework_tokens_per_compaction": 58.96551724137931,
+              "sessions": 1500,
+              "waste_ratio": 0.9752575701996739
+            }
+          ]
+        ],
+        "graph_learned": [
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 59.002758620689654,
+              "sessions": 25,
+              "waste_ratio": 0.9767224039847723
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 59.002758620689654,
+              "sessions": 50,
+              "waste_ratio": 0.9764571522329544
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08551724137931034,
+              "needed": 180,
+              "recall": 0.6555555555555556,
+              "rework_tokens_per_compaction": 50.47448275862069,
+              "sessions": 100,
+              "waste_ratio": 0.9726771821501973
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0703448275862069,
+              "needed": 180,
+              "recall": 0.7166666666666667,
+              "rework_tokens_per_compaction": 42.93655172413793,
+              "sessions": 200,
+              "waste_ratio": 0.9674909755381789
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.038620689655172416,
+              "needed": 180,
+              "recall": 0.8444444444444444,
+              "rework_tokens_per_compaction": 33.859310344827584,
+              "sessions": 400,
+              "waste_ratio": 0.9625225717319836
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.037241379310344824,
+              "needed": 180,
+              "recall": 0.85,
+              "rework_tokens_per_compaction": 24.532413793103448,
+              "sessions": 800,
+              "waste_ratio": 0.9575491986439146
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04,
+              "needed": 180,
+              "recall": 0.8388888888888889,
+              "rework_tokens_per_compaction": 35.28,
+              "sessions": 1500,
+              "waste_ratio": 0.9625893324036953
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07586206896551724,
+              "needed": 180,
+              "recall": 0.6944444444444444,
+              "rework_tokens_per_compaction": 54.888275862068966,
+              "sessions": 25,
+              "waste_ratio": 0.974144338385863
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08689655172413793,
+              "needed": 180,
+              "recall": 0.65,
+              "rework_tokens_per_compaction": 56.93931034482759,
+              "sessions": 50,
+              "waste_ratio": 0.97522853187597
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05517241379310345,
+              "needed": 180,
+              "recall": 0.7777777777777778,
+              "rework_tokens_per_compaction": 46.23310344827586,
+              "sessions": 100,
+              "waste_ratio": 0.9691658068651952
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05655172413793103,
+              "needed": 180,
+              "recall": 0.7722222222222223,
+              "rework_tokens_per_compaction": 44.60689655172414,
+              "sessions": 200,
+              "waste_ratio": 0.967625251969681
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04551724137931035,
+              "needed": 180,
+              "recall": 0.8166666666666667,
+              "rework_tokens_per_compaction": 38.364137931034485,
+              "sessions": 400,
+              "waste_ratio": 0.9636054861733839
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.037241379310344824,
+              "needed": 180,
+              "recall": 0.85,
+              "rework_tokens_per_compaction": 24.470344827586207,
+              "sessions": 800,
+              "waste_ratio": 0.9572901378743153
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04827586206896552,
+              "needed": 180,
+              "recall": 0.8055555555555556,
+              "rework_tokens_per_compaction": 38.76275862068965,
+              "sessions": 1500,
+              "waste_ratio": 0.9642243057298886
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.06344827586206897,
+              "needed": 180,
+              "recall": 0.7444444444444445,
+              "rework_tokens_per_compaction": 50.26068965517241,
+              "sessions": 25,
+              "waste_ratio": 0.9722248114612485
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07172413793103448,
+              "needed": 180,
+              "recall": 0.7111111111111111,
+              "rework_tokens_per_compaction": 50.20275862068966,
+              "sessions": 50,
+              "waste_ratio": 0.9708483553801565
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07448275862068965,
+              "needed": 180,
+              "recall": 0.7,
+              "rework_tokens_per_compaction": 50.07448275862069,
+              "sessions": 100,
+              "waste_ratio": 0.971403134006076
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.044137931034482755,
+              "needed": 180,
+              "recall": 0.8222222222222222,
+              "rework_tokens_per_compaction": 40.16827586206897,
+              "sessions": 200,
+              "waste_ratio": 0.9648866050593822
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.038620689655172416,
+              "needed": 180,
+              "recall": 0.8444444444444444,
+              "rework_tokens_per_compaction": 29.01103448275862,
+              "sessions": 400,
+              "waste_ratio": 0.9593619222609926
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.038620689655172416,
+              "needed": 180,
+              "recall": 0.8444444444444444,
+              "rework_tokens_per_compaction": 29.16551724137931,
+              "sessions": 800,
+              "waste_ratio": 0.9606659320868659
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.041379310344827586,
+              "needed": 180,
+              "recall": 0.8333333333333334,
+              "rework_tokens_per_compaction": 33.77379310344828,
+              "sessions": 1500,
+              "waste_ratio": 0.9614370886948412
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.06344827586206897,
+              "needed": 180,
+              "recall": 0.7444444444444445,
+              "rework_tokens_per_compaction": 50.460689655172416,
+              "sessions": 25,
+              "waste_ratio": 0.9721206759727842
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05379310344827586,
+              "needed": 180,
+              "recall": 0.7833333333333333,
+              "rework_tokens_per_compaction": 45.86344827586207,
+              "sessions": 50,
+              "waste_ratio": 0.9678240016379505
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04551724137931035,
+              "needed": 180,
+              "recall": 0.8166666666666667,
+              "rework_tokens_per_compaction": 40.08827586206897,
+              "sessions": 100,
+              "waste_ratio": 0.9656628083135049
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04827586206896552,
+              "needed": 180,
+              "recall": 0.8055555555555556,
+              "rework_tokens_per_compaction": 39.751724137931035,
+              "sessions": 200,
+              "waste_ratio": 0.9650043324784685
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.041379310344827586,
+              "needed": 180,
+              "recall": 0.8333333333333334,
+              "rework_tokens_per_compaction": 34.51586206896552,
+              "sessions": 400,
+              "waste_ratio": 0.9629681800227701
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04275862068965517,
+              "needed": 180,
+              "recall": 0.8277777777777777,
+              "rework_tokens_per_compaction": 35.146206896551725,
+              "sessions": 800,
+              "waste_ratio": 0.9622643976870415
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04,
+              "needed": 180,
+              "recall": 0.8388888888888889,
+              "rework_tokens_per_compaction": 25.52,
+              "sessions": 1500,
+              "waste_ratio": 0.957875028066897
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09655172413793103,
+              "needed": 180,
+              "recall": 0.6111111111111112,
+              "rework_tokens_per_compaction": 58.04,
+              "sessions": 25,
+              "waste_ratio": 0.9770520269626043
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08827586206896551,
+              "needed": 180,
+              "recall": 0.6444444444444445,
+              "rework_tokens_per_compaction": 56.59724137931035,
+              "sessions": 50,
+              "waste_ratio": 0.9755054855740904
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05517241379310345,
+              "needed": 180,
+              "recall": 0.7777777777777778,
+              "rework_tokens_per_compaction": 45.445517241379314,
+              "sessions": 100,
+              "waste_ratio": 0.9680637017908529
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05103448275862069,
+              "needed": 180,
+              "recall": 0.7944444444444444,
+              "rework_tokens_per_compaction": 40.30068965517241,
+              "sessions": 200,
+              "waste_ratio": 0.9661079815974474
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.038620689655172416,
+              "needed": 180,
+              "recall": 0.8444444444444444,
+              "rework_tokens_per_compaction": 33.99448275862069,
+              "sessions": 400,
+              "waste_ratio": 0.9622730486379103
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.041379310344827586,
+              "needed": 180,
+              "recall": 0.8333333333333334,
+              "rework_tokens_per_compaction": 33.976551724137934,
+              "sessions": 800,
+              "waste_ratio": 0.9625209878981891
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04,
+              "needed": 180,
+              "recall": 0.8388888888888889,
+              "rework_tokens_per_compaction": 30.162758620689655,
+              "sessions": 1500,
+              "waste_ratio": 0.9598406794884652
+            }
+          ]
+        ],
+        "graph_session": [
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 25,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 50,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 100,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 200,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 400,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 800,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 1500,
+              "waste_ratio": 0.9774863843175009
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 25,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 50,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 100,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 200,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 400,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 800,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 1500,
+              "waste_ratio": 0.9774863843175009
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 25,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 50,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 100,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 200,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 400,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 800,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 1500,
+              "waste_ratio": 0.9774863843175009
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 25,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 50,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 100,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 200,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 400,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 800,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 1500,
+              "waste_ratio": 0.9774863843175009
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 25,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 50,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 100,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 200,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 400,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 800,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 1500,
+              "waste_ratio": 0.9774863843175009
+            }
+          ]
+        ],
+        "graph_static": [
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09241379310344827,
+              "needed": 180,
+              "recall": 0.6277777777777778,
+              "rework_tokens_per_compaction": 58.76413793103448,
+              "sessions": 25,
+              "waste_ratio": 0.9768007867803608
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 57.88,
+              "sessions": 50,
+              "waste_ratio": 0.9764932293295329
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09241379310344827,
+              "needed": 180,
+              "recall": 0.6277777777777778,
+              "rework_tokens_per_compaction": 58.19586206896552,
+              "sessions": 100,
+              "waste_ratio": 0.976250606880913
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09517241379310344,
+              "needed": 180,
+              "recall": 0.6166666666666667,
+              "rework_tokens_per_compaction": 58.609655172413795,
+              "sessions": 200,
+              "waste_ratio": 0.9764996742971448
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09517241379310344,
+              "needed": 180,
+              "recall": 0.6166666666666667,
+              "rework_tokens_per_compaction": 58.609655172413795,
+              "sessions": 400,
+              "waste_ratio": 0.9765138901691478
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 56.968275862068964,
+              "sessions": 800,
+              "waste_ratio": 0.976138814574234
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 56.01655172413793,
+              "sessions": 1500,
+              "waste_ratio": 0.9754864446913719
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 58.94620689655172,
+              "sessions": 25,
+              "waste_ratio": 0.9759637550860449
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 59.32551724137931,
+              "sessions": 50,
+              "waste_ratio": 0.9765264952039269
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 59.32551724137931,
+              "sessions": 100,
+              "waste_ratio": 0.9765239562797714
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09517241379310344,
+              "needed": 180,
+              "recall": 0.6166666666666667,
+              "rework_tokens_per_compaction": 59.540689655172415,
+              "sessions": 200,
+              "waste_ratio": 0.9767139116087332
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 57.30068965517241,
+              "sessions": 400,
+              "waste_ratio": 0.9763971298518032
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 56.968275862068964,
+              "sessions": 800,
+              "waste_ratio": 0.9761290847801483
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 56.01655172413793,
+              "sessions": 1500,
+              "waste_ratio": 0.9754864446913719
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08827586206896551,
+              "needed": 180,
+              "recall": 0.6444444444444445,
+              "rework_tokens_per_compaction": 57.746206896551726,
+              "sessions": 25,
+              "waste_ratio": 0.9761783402806274
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 58.59448275862069,
+              "sessions": 50,
+              "waste_ratio": 0.9766352045040569
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 58.41103448275862,
+              "sessions": 100,
+              "waste_ratio": 0.9764415661843805
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09517241379310344,
+              "needed": 180,
+              "recall": 0.6166666666666667,
+              "rework_tokens_per_compaction": 58.609655172413795,
+              "sessions": 200,
+              "waste_ratio": 0.9765174076335527
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 56.968275862068964,
+              "sessions": 400,
+              "waste_ratio": 0.9761318188628794
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0896551724137931,
+              "needed": 180,
+              "recall": 0.6388888888888888,
+              "rework_tokens_per_compaction": 55.853793103448275,
+              "sessions": 800,
+              "waste_ratio": 0.9752882307027589
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 56.01655172413793,
+              "sessions": 1500,
+              "waste_ratio": 0.9754864446913719
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 58.097931034482755,
+              "sessions": 25,
+              "waste_ratio": 0.9763449990465465
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 58.47724137931034,
+              "sessions": 50,
+              "waste_ratio": 0.9765359967810595
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 59.32551724137931,
+              "sessions": 100,
+              "waste_ratio": 0.9769738335087563
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 58.23172413793103,
+              "sessions": 200,
+              "waste_ratio": 0.9766247215642669
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 57.89931034482758,
+              "sessions": 400,
+              "waste_ratio": 0.9761608905773784
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09241379310344827,
+              "needed": 180,
+              "recall": 0.6277777777777778,
+              "rework_tokens_per_compaction": 57.13103448275862,
+              "sessions": 800,
+              "waste_ratio": 0.9763273885286086
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 56.01655172413793,
+              "sessions": 1500,
+              "waste_ratio": 0.9754864446913719
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 58.81103448275862,
+              "sessions": 25,
+              "waste_ratio": 0.9767128657507556
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 58.59448275862069,
+              "sessions": 50,
+              "waste_ratio": 0.9761830463474978
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09379310344827586,
+              "needed": 180,
+              "recall": 0.6222222222222222,
+              "rework_tokens_per_compaction": 59.32551724137931,
+              "sessions": 100,
+              "waste_ratio": 0.9765439481268011
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09517241379310344,
+              "needed": 180,
+              "recall": 0.6166666666666667,
+              "rework_tokens_per_compaction": 59.540689655172415,
+              "sessions": 200,
+              "waste_ratio": 0.9767258564531804
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 57.89931034482758,
+              "sessions": 400,
+              "waste_ratio": 0.9761585033758764
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0896551724137931,
+              "needed": 180,
+              "recall": 0.6388888888888888,
+              "rework_tokens_per_compaction": 55.853793103448275,
+              "sessions": 800,
+              "waste_ratio": 0.975291204625837
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0910344827586207,
+              "needed": 180,
+              "recall": 0.6333333333333333,
+              "rework_tokens_per_compaction": 56.01655172413793,
+              "sessions": 1500,
+              "waste_ratio": 0.9754864446913719
+            }
+          ]
+        ],
+        "kv_learned": [
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0896551724137931,
+              "needed": 180,
+              "recall": 0.6388888888888888,
+              "rework_tokens_per_compaction": 55.59862068965517,
+              "sessions": 0,
+              "waste_ratio": 0.9758092621234509
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09517241379310344,
+              "needed": 180,
+              "recall": 0.6166666666666667,
+              "rework_tokens_per_compaction": 58.255172413793105,
+              "sessions": 25,
+              "waste_ratio": 0.9769200760645657
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.09517241379310344,
+              "needed": 180,
+              "recall": 0.6166666666666667,
+              "rework_tokens_per_compaction": 58.255172413793105,
+              "sessions": 50,
+              "waste_ratio": 0.9769200760645657
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08275862068965517,
+              "needed": 180,
+              "recall": 0.6666666666666666,
+              "rework_tokens_per_compaction": 53.57103448275862,
+              "sessions": 100,
+              "waste_ratio": 0.97426786321535
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.06620689655172414,
+              "needed": 180,
+              "recall": 0.7333333333333333,
+              "rework_tokens_per_compaction": 42.867586206896554,
+              "sessions": 200,
+              "waste_ratio": 0.9682136288965173
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0496551724137931,
+              "needed": 180,
+              "recall": 0.8,
+              "rework_tokens_per_compaction": 42.0951724137931,
+              "sessions": 400,
+              "waste_ratio": 0.9667773723822585
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0496551724137931,
+              "needed": 180,
+              "recall": 0.8,
+              "rework_tokens_per_compaction": 34.72965517241379,
+              "sessions": 800,
+              "waste_ratio": 0.9640443095006315
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05103448275862069,
+              "needed": 180,
+              "recall": 0.7944444444444444,
+              "rework_tokens_per_compaction": 42.70206896551724,
+              "sessions": 1500,
+              "waste_ratio": 0.9670244892301239
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0896551724137931,
+              "needed": 180,
+              "recall": 0.6388888888888888,
+              "rework_tokens_per_compaction": 55.59862068965517,
+              "sessions": 0,
+              "waste_ratio": 0.9758092621234509
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0703448275862069,
+              "needed": 180,
+              "recall": 0.7166666666666667,
+              "rework_tokens_per_compaction": 49.75448275862069,
+              "sessions": 25,
+              "waste_ratio": 0.9723341420443058
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07310344827586207,
+              "needed": 180,
+              "recall": 0.7055555555555556,
+              "rework_tokens_per_compaction": 50.87310344827586,
+              "sessions": 50,
+              "waste_ratio": 0.9729782859290363
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05379310344827586,
+              "needed": 180,
+              "recall": 0.7833333333333333,
+              "rework_tokens_per_compaction": 45.88413793103448,
+              "sessions": 100,
+              "waste_ratio": 0.96860648453609
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05517241379310345,
+              "needed": 180,
+              "recall": 0.7777777777777778,
+              "rework_tokens_per_compaction": 45.68137931034483,
+              "sessions": 200,
+              "waste_ratio": 0.9692409940532299
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.044137931034482755,
+              "needed": 180,
+              "recall": 0.8222222222222222,
+              "rework_tokens_per_compaction": 38.34620689655173,
+              "sessions": 400,
+              "waste_ratio": 0.9643917172796563
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04827586206896552,
+              "needed": 180,
+              "recall": 0.8055555555555556,
+              "rework_tokens_per_compaction": 36.55034482758621,
+              "sessions": 800,
+              "waste_ratio": 0.9642017870148223
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0496551724137931,
+              "needed": 180,
+              "recall": 0.8,
+              "rework_tokens_per_compaction": 41.8648275862069,
+              "sessions": 1500,
+              "waste_ratio": 0.9651970266607863
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0896551724137931,
+              "needed": 180,
+              "recall": 0.6388888888888888,
+              "rework_tokens_per_compaction": 55.59862068965517,
+              "sessions": 0,
+              "waste_ratio": 0.9758092621234509
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.06206896551724138,
+              "needed": 180,
+              "recall": 0.75,
+              "rework_tokens_per_compaction": 49.73379310344828,
+              "sessions": 25,
+              "waste_ratio": 0.9712523042073815
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.06896551724137931,
+              "needed": 180,
+              "recall": 0.7222222222222222,
+              "rework_tokens_per_compaction": 52.568275862068965,
+              "sessions": 50,
+              "waste_ratio": 0.973206339834949
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07724137931034483,
+              "needed": 180,
+              "recall": 0.6888888888888889,
+              "rework_tokens_per_compaction": 52.27310344827586,
+              "sessions": 100,
+              "waste_ratio": 0.9730766730940053
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05241379310344828,
+              "needed": 180,
+              "recall": 0.7888888888888889,
+              "rework_tokens_per_compaction": 44.94758620689655,
+              "sessions": 200,
+              "waste_ratio": 0.9676821968962771
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05655172413793103,
+              "needed": 180,
+              "recall": 0.7722222222222223,
+              "rework_tokens_per_compaction": 41.14896551724138,
+              "sessions": 400,
+              "waste_ratio": 0.967215276736136
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04827586206896552,
+              "needed": 180,
+              "recall": 0.8055555555555556,
+              "rework_tokens_per_compaction": 38.43586206896552,
+              "sessions": 800,
+              "waste_ratio": 0.9646893955148554
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04689655172413793,
+              "needed": 180,
+              "recall": 0.8111111111111111,
+              "rework_tokens_per_compaction": 39.21931034482758,
+              "sessions": 1500,
+              "waste_ratio": 0.9648442496191993
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0896551724137931,
+              "needed": 180,
+              "recall": 0.6388888888888888,
+              "rework_tokens_per_compaction": 55.59862068965517,
+              "sessions": 0,
+              "waste_ratio": 0.9758092621234509
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.06206896551724138,
+              "needed": 180,
+              "recall": 0.75,
+              "rework_tokens_per_compaction": 50.65793103448276,
+              "sessions": 25,
+              "waste_ratio": 0.9716633156379731
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0496551724137931,
+              "needed": 180,
+              "recall": 0.8,
+              "rework_tokens_per_compaction": 44.31310344827586,
+              "sessions": 50,
+              "waste_ratio": 0.9672444691004464
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05241379310344828,
+              "needed": 180,
+              "recall": 0.7888888888888889,
+              "rework_tokens_per_compaction": 44.88275862068966,
+              "sessions": 100,
+              "waste_ratio": 0.9679058430131513
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0496551724137931,
+              "needed": 180,
+              "recall": 0.8,
+              "rework_tokens_per_compaction": 43.63448275862069,
+              "sessions": 200,
+              "waste_ratio": 0.9673455505296573
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05241379310344828,
+              "needed": 180,
+              "recall": 0.7888888888888889,
+              "rework_tokens_per_compaction": 41.675862068965515,
+              "sessions": 400,
+              "waste_ratio": 0.9661999118435375
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04689655172413793,
+              "needed": 180,
+              "recall": 0.8111111111111111,
+              "rework_tokens_per_compaction": 40.473103448275864,
+              "sessions": 800,
+              "waste_ratio": 0.9653820937051613
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05517241379310345,
+              "needed": 180,
+              "recall": 0.7777777777777778,
+              "rework_tokens_per_compaction": 38.21103448275862,
+              "sessions": 1500,
+              "waste_ratio": 0.9655800003334147
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0896551724137931,
+              "needed": 180,
+              "recall": 0.6388888888888888,
+              "rework_tokens_per_compaction": 55.59862068965517,
+              "sessions": 0,
+              "waste_ratio": 0.9758092621234509
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08827586206896551,
+              "needed": 180,
+              "recall": 0.6444444444444445,
+              "rework_tokens_per_compaction": 55.628965517241376,
+              "sessions": 25,
+              "waste_ratio": 0.9758708548004801
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07448275862068965,
+              "needed": 180,
+              "recall": 0.7,
+              "rework_tokens_per_compaction": 53.25931034482759,
+              "sessions": 50,
+              "waste_ratio": 0.9739465615671345
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05103448275862069,
+              "needed": 180,
+              "recall": 0.7944444444444444,
+              "rework_tokens_per_compaction": 43.855172413793106,
+              "sessions": 100,
+              "waste_ratio": 0.9679371902912777
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05241379310344828,
+              "needed": 180,
+              "recall": 0.7888888888888889,
+              "rework_tokens_per_compaction": 42.364137931034485,
+              "sessions": 200,
+              "waste_ratio": 0.9670183541027989
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04551724137931035,
+              "needed": 180,
+              "recall": 0.8166666666666667,
+              "rework_tokens_per_compaction": 38.78068965517242,
+              "sessions": 400,
+              "waste_ratio": 0.9647234191930241
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04551724137931035,
+              "needed": 180,
+              "recall": 0.8166666666666667,
+              "rework_tokens_per_compaction": 36.10896551724138,
+              "sessions": 800,
+              "waste_ratio": 0.9633255828476572
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04689655172413793,
+              "needed": 180,
+              "recall": 0.8111111111111111,
+              "rework_tokens_per_compaction": 38.53103448275862,
+              "sessions": 1500,
+              "waste_ratio": 0.9634430744490812
+            }
+          ]
+        ],
+        "oracle": [
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 0,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 25,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 50,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 100,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 200,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 400,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 800,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 1500,
+              "waste_ratio": 0.0
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 0,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 25,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 50,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 100,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 200,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 400,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 800,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 1500,
+              "waste_ratio": 0.0
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 0,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 25,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 50,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 100,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 200,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 400,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 800,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 1500,
+              "waste_ratio": 0.0
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 0,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 25,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 50,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 100,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 200,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 400,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 800,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 1500,
+              "waste_ratio": 0.0
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 0,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 25,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 50,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 100,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 200,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 400,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 800,
+              "waste_ratio": 0.0
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.002758620689655172,
+              "needed": 180,
+              "recall": 0.9888888888888889,
+              "rework_tokens_per_compaction": 2.8275862068965516,
+              "sessions": 1500,
+              "waste_ratio": 0.0
+            }
+          ]
+        ],
+        "recency": [
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 0,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 25,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 50,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 100,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 200,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 400,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 800,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 1500,
+              "waste_ratio": 0.9706027139324759
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 0,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 25,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 50,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 100,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 200,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 400,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 800,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 1500,
+              "waste_ratio": 0.9706027139324759
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 0,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 25,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 50,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 100,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 200,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 400,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 800,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 1500,
+              "waste_ratio": 0.9706027139324759
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 0,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 25,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 50,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 100,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 200,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 400,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 800,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 1500,
+              "waste_ratio": 0.9706027139324759
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 0,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 25,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 50,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 100,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 200,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 400,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 800,
+              "waste_ratio": 0.9706027139324759
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1103448275862069,
+              "needed": 180,
+              "recall": 0.5555555555555556,
+              "rework_tokens_per_compaction": 52.48827586206897,
+              "sessions": 1500,
+              "waste_ratio": 0.9706027139324759
+            }
+          ]
+        ],
+        "weights_only": [
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1006896551724138,
+              "needed": 180,
+              "recall": 0.5944444444444444,
+              "rework_tokens_per_compaction": 58.37655172413793,
+              "sessions": 25,
+              "waste_ratio": 0.9776324421403897
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.1006896551724138,
+              "needed": 180,
+              "recall": 0.5944444444444444,
+              "rework_tokens_per_compaction": 58.37655172413793,
+              "sessions": 50,
+              "waste_ratio": 0.9776324421403897
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08827586206896551,
+              "needed": 180,
+              "recall": 0.6444444444444445,
+              "rework_tokens_per_compaction": 52.70068965517241,
+              "sessions": 100,
+              "waste_ratio": 0.9739754297630495
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07448275862068965,
+              "needed": 180,
+              "recall": 0.7,
+              "rework_tokens_per_compaction": 47.78758620689655,
+              "sessions": 200,
+              "waste_ratio": 0.9704660358329165
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04551724137931035,
+              "needed": 180,
+              "recall": 0.8166666666666667,
+              "rework_tokens_per_compaction": 38.78068965517242,
+              "sessions": 400,
+              "waste_ratio": 0.9650372867318806
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04275862068965517,
+              "needed": 180,
+              "recall": 0.8277777777777777,
+              "rework_tokens_per_compaction": 32.73241379310345,
+              "sessions": 800,
+              "waste_ratio": 0.9625452797759154
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0496551724137931,
+              "needed": 180,
+              "recall": 0.8,
+              "rework_tokens_per_compaction": 42.48137931034483,
+              "sessions": 1500,
+              "waste_ratio": 0.9668071214419475
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0703448275862069,
+              "needed": 180,
+              "recall": 0.7166666666666667,
+              "rework_tokens_per_compaction": 52.88275862068966,
+              "sessions": 25,
+              "waste_ratio": 0.9729712955779675
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08551724137931034,
+              "needed": 180,
+              "recall": 0.6555555555555556,
+              "rework_tokens_per_compaction": 56.035862068965514,
+              "sessions": 50,
+              "waste_ratio": 0.9753188813226344
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.057931034482758624,
+              "needed": 180,
+              "recall": 0.7666666666666667,
+              "rework_tokens_per_compaction": 46.533793103448275,
+              "sessions": 100,
+              "waste_ratio": 0.9694519895749371
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05655172413793103,
+              "needed": 180,
+              "recall": 0.7722222222222223,
+              "rework_tokens_per_compaction": 45.31310344827586,
+              "sessions": 200,
+              "waste_ratio": 0.9690667863048096
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04275862068965517,
+              "needed": 180,
+              "recall": 0.8277777777777777,
+              "rework_tokens_per_compaction": 37.70206896551724,
+              "sessions": 400,
+              "waste_ratio": 0.9642291784060741
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.044137931034482755,
+              "needed": 180,
+              "recall": 0.8222222222222222,
+              "rework_tokens_per_compaction": 33.45379310344828,
+              "sessions": 800,
+              "waste_ratio": 0.9626932163445432
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04689655172413793,
+              "needed": 180,
+              "recall": 0.8111111111111111,
+              "rework_tokens_per_compaction": 40.140689655172416,
+              "sessions": 1500,
+              "waste_ratio": 0.9649439763365832
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.06206896551724138,
+              "needed": 180,
+              "recall": 0.75,
+              "rework_tokens_per_compaction": 50.26620689655172,
+              "sessions": 25,
+              "waste_ratio": 0.972417671749718
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07172413793103448,
+              "needed": 180,
+              "recall": 0.7111111111111111,
+              "rework_tokens_per_compaction": 52.19862068965517,
+              "sessions": 50,
+              "waste_ratio": 0.9722696699062813
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.07862068965517241,
+              "needed": 180,
+              "recall": 0.6833333333333333,
+              "rework_tokens_per_compaction": 50.72137931034483,
+              "sessions": 100,
+              "waste_ratio": 0.9725563117668791
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0496551724137931,
+              "needed": 180,
+              "recall": 0.8,
+              "rework_tokens_per_compaction": 42.48137931034483,
+              "sessions": 200,
+              "waste_ratio": 0.9666361523529873
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04689655172413793,
+              "needed": 180,
+              "recall": 0.8111111111111111,
+              "rework_tokens_per_compaction": 36.34620689655173,
+              "sessions": 400,
+              "waste_ratio": 0.9638201581986001
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04275862068965517,
+              "needed": 180,
+              "recall": 0.8277777777777777,
+              "rework_tokens_per_compaction": 34.52551724137931,
+              "sessions": 800,
+              "waste_ratio": 0.9628142287688833
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.041379310344827586,
+              "needed": 180,
+              "recall": 0.8333333333333334,
+              "rework_tokens_per_compaction": 35.249655172413796,
+              "sessions": 1500,
+              "waste_ratio": 0.9628368122682385
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08413793103448276,
+              "needed": 180,
+              "recall": 0.6611111111111111,
+              "rework_tokens_per_compaction": 54.628965517241376,
+              "sessions": 25,
+              "waste_ratio": 0.974647519695202
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05379310344827586,
+              "needed": 180,
+              "recall": 0.7833333333333333,
+              "rework_tokens_per_compaction": 44.42758620689655,
+              "sessions": 50,
+              "waste_ratio": 0.9675149066974686
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0496551724137931,
+              "needed": 180,
+              "recall": 0.8,
+              "rework_tokens_per_compaction": 43.751724137931035,
+              "sessions": 100,
+              "waste_ratio": 0.9678261488223926
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04827586206896552,
+              "needed": 180,
+              "recall": 0.8055555555555556,
+              "rework_tokens_per_compaction": 41.89793103448276,
+              "sessions": 200,
+              "waste_ratio": 0.9665780282786222
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04827586206896552,
+              "needed": 180,
+              "recall": 0.8055555555555556,
+              "rework_tokens_per_compaction": 41.097931034482755,
+              "sessions": 400,
+              "waste_ratio": 0.9660731561632024
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04689655172413793,
+              "needed": 180,
+              "recall": 0.8111111111111111,
+              "rework_tokens_per_compaction": 37.540689655172415,
+              "sessions": 800,
+              "waste_ratio": 0.9640037265296113
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04689655172413793,
+              "needed": 180,
+              "recall": 0.8111111111111111,
+              "rework_tokens_per_compaction": 36.81793103448276,
+              "sessions": 1500,
+              "waste_ratio": 0.9634778882636761
+            }
+          ],
+          [
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.0993103448275862,
+              "needed": 180,
+              "recall": 0.6,
+              "rework_tokens_per_compaction": 59.17103448275862,
+              "sessions": 0,
+              "waste_ratio": 0.9774863843175009
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08413793103448276,
+              "needed": 180,
+              "recall": 0.6611111111111111,
+              "rework_tokens_per_compaction": 52.87724137931035,
+              "sessions": 25,
+              "waste_ratio": 0.9746568863536083
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.08275862068965517,
+              "needed": 180,
+              "recall": 0.6666666666666666,
+              "rework_tokens_per_compaction": 55.32,
+              "sessions": 50,
+              "waste_ratio": 0.9750373454763263
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05241379310344828,
+              "needed": 180,
+              "recall": 0.7888888888888889,
+              "rework_tokens_per_compaction": 43.65103448275862,
+              "sessions": 100,
+              "waste_ratio": 0.9682477692293228
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.05103448275862069,
+              "needed": 180,
+              "recall": 0.7944444444444444,
+              "rework_tokens_per_compaction": 40.793103448275865,
+              "sessions": 200,
+              "waste_ratio": 0.9667595794635732
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04275862068965517,
+              "needed": 180,
+              "recall": 0.8277777777777777,
+              "rework_tokens_per_compaction": 36.628965517241376,
+              "sessions": 400,
+              "waste_ratio": 0.9640337757383906
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.044137931034482755,
+              "needed": 180,
+              "recall": 0.8222222222222222,
+              "rework_tokens_per_compaction": 36.20551724137931,
+              "sessions": 800,
+              "waste_ratio": 0.9640891112381494
+            },
+            {
+              "compactions": 725,
+              "faults_per_compaction": 0.04689655172413793,
+              "needed": 180,
+              "recall": 0.8111111111111111,
+              "rework_tokens_per_compaction": 40.140689655172416,
+              "sessions": 1500,
+              "waste_ratio": 0.9649798314498441
+            }
+          ]
+        ]
+      },
+      "graph_summary": [
+        {
+          "edges_CO": 21254,
+          "edges_FIXED_BY": 74,
+          "edges_MENTIONS": 2724,
+          "edges_NEXT": 1295,
+          "entities_Cmd": 728,
+          "entities_Error": 518,
+          "entities_File": 775,
+          "entities_Search": 1958,
+          "entities_Symbol": 172,
+          "sessions": 1500
+        },
+        {
+          "edges_CO": 21254,
+          "edges_FIXED_BY": 74,
+          "edges_MENTIONS": 2724,
+          "edges_NEXT": 1295,
+          "entities_Cmd": 728,
+          "entities_Error": 518,
+          "entities_File": 775,
+          "entities_Search": 1958,
+          "entities_Symbol": 172,
+          "sessions": 1500
+        },
+        {
+          "edges_CO": 21254,
+          "edges_FIXED_BY": 74,
+          "edges_MENTIONS": 2724,
+          "edges_NEXT": 1295,
+          "entities_Cmd": 728,
+          "entities_Error": 518,
+          "entities_File": 775,
+          "entities_Search": 1958,
+          "entities_Symbol": 172,
+          "sessions": 1500
+        },
+        {
+          "edges_CO": 21254,
+          "edges_FIXED_BY": 74,
+          "edges_MENTIONS": 2724,
+          "edges_NEXT": 1295,
+          "entities_Cmd": 728,
+          "entities_Error": 518,
+          "entities_File": 775,
+          "entities_Search": 1958,
+          "entities_Symbol": 172,
+          "sessions": 1500
+        },
+        {
+          "edges_CO": 21254,
+          "edges_FIXED_BY": 74,
+          "edges_MENTIONS": 2724,
+          "edges_NEXT": 1295,
+          "entities_Cmd": 728,
+          "entities_Error": 518,
+          "entities_File": 775,
+          "entities_Search": 1958,
+          "entities_Symbol": 172,
+          "sessions": 1500
+        }
+      ],
+      "learn_stats": [
+        {
+          "faults_seen": 183,
+          "fixed_by": 200,
+          "next_created": 1295,
+          "next_strengthened": 740,
+          "next_weakened": 741
+        },
+        {
+          "faults_seen": 186,
+          "fixed_by": 200,
+          "next_created": 1295,
+          "next_strengthened": 740,
+          "next_weakened": 723
+        },
+        {
+          "faults_seen": 191,
+          "fixed_by": 200,
+          "next_created": 1295,
+          "next_strengthened": 740,
+          "next_weakened": 730
+        },
+        {
+          "faults_seen": 198,
+          "fixed_by": 200,
+          "next_created": 1295,
+          "next_strengthened": 740,
+          "next_weakened": 748
+        },
+        {
+          "faults_seen": 190,
+          "fixed_by": 200,
+          "next_created": 1295,
+          "next_strengthened": 740,
+          "next_weakened": 731
+        }
+      ],
+      "repo": "pydantic__pydantic",
+      "test_compactions": 725,
+      "test_sessions": 200,
+      "train_sessions": 1500
+    }
+  ],
+  "seeds": 5,
+  "store": "memory"
+}
