@@ -135,7 +135,14 @@ any harness ── tool calls ──▶  pagefault (Rust, axum)  ── HTTP JSO
 
    On startup the service rebuilds every repo's learner from HydraDB (`load_from_store`), so a restart resumes learning instead of starting over. This was verified on Render: a repo's learned edges reloaded after a restart and after a redeploy.
 
-   **Durability needs S3.** HydraDB's local-folder store can't do the conditional updates (`PutMode::Update`) that a restarted writer needs, so writes fail after a restart on local storage. The live demo therefore starts from a fresh local store on each boot. Setting `CLOUD_PROVIDER=aws`, `AWS_BUCKET_NAME`, `AWS_DEFAULT_REGION` and credentials puts HydraDB on S3, its native mode, where state persists. A CI test on S3-compatible RustFS showed data surviving a restart, with the 30 s writer-lease handoff. The full debugging story is in [docs/LEARNING.md](docs/LEARNING.md).
+   **Durable on S3.** The live deployment runs HydraDB in its native object-store mode:
+   - **Storage:** a private S3 bucket in `ap-southeast-1`, accessed through an IAM user that can touch only that bucket.
+   - **Verified on Render:** a repo's learned graph came back identical after a full redeploy (new container) and after a restart, and the first write afterwards succeeded within 2 s.
+   - **Why not local disk:** the local-folder store can't do the conditional updates (`PutMode::Update`) that a restarted writer needs. So `start.sh` gives local mode a fresh store on each boot, and durability means S3.
+   - **Configuration:** `CLOUD_PROVIDER=aws`, `AWS_BUCKET_NAME`, `AWS_DEFAULT_REGION` and credentials.
+   - **Found along the way:** after a restart on S3, HydraDB's own write idempotency keys (`http-query-N`, a counter that restarts from zero) collide with keys stored by the previous process. pagefault avoids this by sending a globally unique `query_id` with every request.
+
+   The full debugging story is in [docs/LEARNING.md](docs/LEARNING.md).
 
 HydraDB specifics we built around:
 - Node ids are non-negative integers, so we hash entities to 56 bits plus a 7-bit space for tenants and experiment arms.
