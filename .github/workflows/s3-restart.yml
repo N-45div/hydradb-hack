@@ -54,7 +54,14 @@ jobs:
           docker rm -f pf
           sleep 2
           run_node
-          python3 scripts/restart_test.py after http://127.0.0.1:8443 $TOKEN
+          START=$(date +%s)
+          for i in $(seq 1 40); do
+            OUT=$(python3 scripts/restart_test.py after http://127.0.0.1:8443 $TOKEN)
+            echo "$OUT" | grep -q not_cell_writer || break
+            sleep 3
+          done
+          echo "writer handoff took $(($(date +%s) - START)) s after readiness"
+          echo "$OUT"
           docker logs pf 2>&1 | grep -E '"level":"(WARN|ERROR)"' | tail -5 || true
       - name: Commit output
         if: always()
