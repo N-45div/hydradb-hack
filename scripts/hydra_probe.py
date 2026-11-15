@@ -8,8 +8,10 @@ import json, sys, urllib.request, urllib.error
 URL, TOKEN = sys.argv[1].rstrip("/"), sys.argv[2]
 
 
-def q(query, params=None, page_size=4096):
+def q(query, params=None, page_size=4096, query_id=None):
     body = {"cell_id": "cell-0", "query": query, "parameters": params or {}, "page_size": page_size}
+    if query_id:
+        body["query_id"] = query_id
     req = urllib.request.Request(f"{URL}/v1/graphs/default/query", data=json.dumps(body).encode(),
                                  headers={"content-type": "application/json", "authorization": f"Bearer {TOKEN}",
                                           "x-graph-namespace": "default"})
@@ -70,5 +72,10 @@ show("re-upsert same ids", q(f"UNWIND $rows AS row MERGE (n {{id: row.id}}) SET 
 show("count after re-upsert", q(f"MATCH (n:S{S}) RETURN count(*) AS c"))
 show("re-create edge on recreated ids", q(f"UNWIND $rows AS row MATCH (a:S{S} {{id: row.src}}), (b:S{S} {{id: row.dst}}) MERGE (a)-[r:CO {{id: row.eid}}]->(b) SET r.w = row.w, r.n = row.n", {"rows": [{"src": 900001, "dst": 900002, "eid": 77, "w": 0.5, "n": 1}]}))
 show("re-upsert again (second time)", q(f"UNWIND $rows AS row MERGE (n {{id: row.id}}) SET n:S{S}, n.kind = row.kind, n.key = row.key, n.lbl = row.lbl, n.repo = row.repo, n.faults = row.faults", {"rows": rows}))
+# Client-supplied query_id: does HydraDB accept it and key idempotency on it?
+show("write with client query_id", q(f"UNWIND $rows AS row MERGE (n {{id: row.id}}) SET n:S{S}, n.kind = row.kind", {"rows": [{"id": 901001, "kind": "File"}]}, query_id="pf-probe-boot1-1"))
+show("edge write with client query_id", q(f"UNWIND $rows AS row MATCH (a:S{S} {{id: row.src}}), (b:S{S} {{id: row.dst}}) MERGE (a)-[r:CO {{id: row.eid}}]->(b) SET r.w = row.w", {"rows": [{"src": 901001, "dst": 900002, "eid": 991, "w": 0.5}]}, query_id="pf-probe-boot1-2"))
+show("same query_id, different payload (conflict expected?)", q(f"UNWIND $rows AS row MATCH (a:S{S} {{id: row.src}}), (b:S{S} {{id: row.dst}}) MERGE (a)-[r:CO {{id: row.eid}}]->(b) SET r.w = row.w", {"rows": [{"src": 901001, "dst": 900003, "eid": 992, "w": 0.7}]}, query_id="pf-probe-boot1-2"))
+show("read with client query_id, small pages", q(f"MATCH (n:S{S}) RETURN n.id AS id", page_size=2, query_id="pf-probe-boot1-3"))
 show("clear", q(f"MATCH (n:S{S}) DETACH DELETE n"))
 show("clear meta", q("MATCH (n:M9) DETACH DELETE n"))
