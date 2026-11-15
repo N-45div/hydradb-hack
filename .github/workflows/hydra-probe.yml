@@ -1,0 +1,33 @@
+name: hydra-probe
+# Starts the published pagefault image (HydraDB graph-node inside) and probes the
+# exact query shapes pagefault uses: MSpaths, algo.degree, state load/persist.
+on:
+  push:
+    branches: [main]
+    paths: ["scripts/hydra_probe.py", ".github/workflows/hydra-probe.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Start HydraDB
+        run: |
+          mkdir -p data && chmod 777 data
+          echo "probe-token-0123456789abcdef0123456789" > data/auth-token
+          docker run -d --name pf -p 8443:8443 -p 9090:9090 -v $PWD/data:/data \
+            -e HYDRADB_TOKEN=probe-token-0123456789abcdef0123456789 \
+            ghcr.io/n-45div/hydradb-hack:latest
+          for i in $(seq 1 90); do curl -sf http://127.0.0.1:9090/readyz && break; sleep 2; done
+          docker logs pf 2>&1 | tail -5
+      - name: Probe
+        run: python3 scripts/hydra_probe.py http://127.0.0.1:8443 probe-token-0123456789abcdef0123456789
